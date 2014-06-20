@@ -1,26 +1,28 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 
 public class GuiTest_takeda extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
 
 	/**
 	 * Launch the application.
@@ -42,89 +44,105 @@ public class GuiTest_takeda extends JFrame {
 	 * Create the frame.
 	 */
 	public GuiTest_takeda() {
+		setTitle("\u7BA1\u7406\u753B\u9762");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 543, 434);
+		setBounds(100, 100, 543, 515);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_contentPane.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		contentPane.setLayout(gbl_contentPane);
+		contentPane.setLayout(null);
 		
-		JLabel label = new JLabel("1111");
-		GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.anchor = GridBagConstraints.EAST;
-		gbc_label.insets = new Insets(0, 0, 5, 5);
-		gbc_label.gridx = 0;
-		gbc_label.gridy = 0;
-		contentPane.add(label, gbc_label);
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(12, 13, 501, 374);
+		contentPane.add(tabbedPane);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("âÔàıä«óù", null, panel, null);
+		panel.setLayout(null);
+		
+		JLabel label = new JLabel("\u30BF\u30D61\u3067\u3059");
+		label.setBounds(12, 0, 51, 16);
+		panel.add(label);
 		
 		textField = new JTextField();
-		textField.setText("?");
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 0;
-		contentPane.add(textField, gbc_textField);
+		textField.setBounds(75, -3, 106, 22);
+		panel.add(textField);
 		textField.setColumns(10);
 		
-		JButton btnGo = new JButton("Go");
-		btnGo.addMouseListener(new MouseAdapter() {
+		textField_1 = new JTextField();
+		textField_1.setBounds(12, 35, 51, 22);
+		panel.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JLabel label_1 = new JLabel("+");
+		label_1.setBounds(75, 38, 16, 16);
+		panel.add(label_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(96, 35, 51, 22);
+		panel.add(textField_2);
+		textField_2.setColumns(10);
+		
+		JLabel label_2 = new JLabel("\uFF1D");
+		label_2.setBounds(159, 38, 22, 16);
+		panel.add(label_2);
+		
+		textField_3 = new JTextField();
+		textField_3.setEditable(false);
+		textField_3.setBounds(184, 35, 106, 22);
+		panel.add(textField_3);
+		textField_3.setColumns(10);
+		
+		
+		JButton button = new JButton("\u8A08\u7B97");
+		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				textField.add(textField);
-				
+				int ans = 0;
+				try{
+					ans = Integer.parseInt(textField_1.getText()) + Integer.parseInt(textField_2.getText());
+				}catch(Exception e){
+					
+				}finally{
+					textField_3.setText(Integer.toString(ans));
+				}
 			}
 		});
-		GridBagConstraints gbc_btnGo = new GridBagConstraints();
-		gbc_btnGo.insets = new Insets(0, 0, 5, 0);
-		gbc_btnGo.gridx = 2;
-		gbc_btnGo.gridy = 0;
-		contentPane.add(btnGo, gbc_btnGo);
+		button.setBounds(304, 34, 101, 25);
+		panel.add(button);
 		
-		JLabel label_1 = new JLabel("2222");
-		GridBagConstraints gbc_label_1 = new GridBagConstraints();
-		gbc_label_1.anchor = GridBagConstraints.EAST;
-		gbc_label_1.insets = new Insets(0, 0, 5, 5);
-		gbc_label_1.gridx = 0;
-		gbc_label_1.gridy = 1;
-		contentPane.add(label_1, gbc_label_1);
+		JSpinner spinner = new JSpinner();
+		spinner.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+		spinner.setBounds(22, 70, 41, 22);
+		panel.add(spinner);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"\u3042", "\u3044", "\u3046", "\u3048", "\u304A", "\u305D\u306E\u4ED6"}));
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 1;
-		contentPane.add(comboBox, gbc_comboBox);
+		comboBox.setEditable(true);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"", "\u3042\u3044\u3046\u3048\u304A", "\u304B\u304D\u304F\u3051\u3053", "\u3055\u3057\u3059\u305B\u305D", "\u305F\u3061\u3064\u3066\u3068"}));
+		comboBox.setBounds(31, 105, 179, 22);
+		panel.add(comboBox);
 		
-		JLabel label_2 = new JLabel("3333");
-		GridBagConstraints gbc_label_2 = new GridBagConstraints();
-		gbc_label_2.insets = new Insets(0, 0, 5, 5);
-		gbc_label_2.gridx = 0;
-		gbc_label_2.gridy = 2;
-		contentPane.add(label_2, gbc_label_2);
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("ê}èëä«óù", null, panel_1, null);
+		panel_1.setLayout(null);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setText("\u30C6\u30AD\u30B9\u30C8\u30A8\u30EA\u30A2");
-		GridBagConstraints gbc_textArea = new GridBagConstraints();
-		gbc_textArea.insets = new Insets(0, 0, 5, 5);
-		gbc_textArea.fill = GridBagConstraints.BOTH;
-		gbc_textArea.gridx = 1;
-		gbc_textArea.gridy = 2;
-		contentPane.add(textArea, gbc_textArea);
-		
-		JLabel label_3 = new JLabel("4444");
-		GridBagConstraints gbc_label_3 = new GridBagConstraints();
-		gbc_label_3.insets = new Insets(0, 0, 0, 5);
-		gbc_label_3.gridx = 0;
-		gbc_label_3.gridy = 3;
-		contentPane.add(label_3, gbc_label_3);
+		JButton btnNewButton = new JButton("\u958B\u304F");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							NewWindow frame = new NewWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		btnNewButton.setBounds(12, 400, 135, 57);
+		contentPane.add(btnNewButton);
 	}
-
 }
