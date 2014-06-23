@@ -32,6 +32,7 @@ public class NewWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public NewWindow() {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setResizable(false);
 		setTitle("\u691C\u7D22\u753B\u9762");
 		setType(Type.UTILITY);

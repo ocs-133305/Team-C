@@ -14,6 +14,9 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
 
 
 public class GuiTest_takeda extends JFrame {
@@ -122,9 +125,28 @@ public class GuiTest_takeda extends JFrame {
 		comboBox.setBounds(31, 105, 179, 22);
 		panel.add(comboBox);
 		
+		JLabel label_3 = new JLabel("\u3042\u3044\u3046");
+		label_3.setBounds(31, 175, 57, 16);
+		panel.add(label_3);
+		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("ê}èëä«óù", null, panel_1, null);
 		panel_1.setLayout(null);
+		
+		JList list = new JList();
+		list.setValueIsAdjusting(true);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {"1111", "2222", "3333"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		list.setBounds(29, 28, 374, 284);
+		panel_1.add(list);
 		
 		JButton btnNewButton = new JButton("\u958B\u304F");
 		btnNewButton.addMouseListener(new MouseAdapter() {
