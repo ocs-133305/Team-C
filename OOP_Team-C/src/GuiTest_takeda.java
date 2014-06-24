@@ -17,6 +17,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
+import java.awt.Font;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 
 public class GuiTest_takeda extends JFrame {
@@ -26,6 +29,7 @@ public class GuiTest_takeda extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -145,10 +149,34 @@ public class GuiTest_takeda extends JFrame {
 				return values[index];
 			}
 		});
-		list.setBounds(29, 28, 374, 284);
+		list.setBounds(29, 28, 90, 284);
 		panel_1.add(list);
 		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column"
+			}
+		));
+		table.getColumnModel().getColumn(1).setPreferredWidth(79);
+		table.setBounds(193, 28, 291, 284);
+		panel_1.add(table);
+		
 		JButton btnNewButton = new JButton("\u958B\u304F");
+		btnNewButton.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -166,5 +194,9 @@ public class GuiTest_takeda extends JFrame {
 		});
 		btnNewButton.setBounds(12, 400, 135, 57);
 		contentPane.add(btnNewButton);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("New check box");
+		chckbxNewCheckBox.setBounds(238, 405, 117, 25);
+		contentPane.add(chckbxNewCheckBox);
 	}
 }
