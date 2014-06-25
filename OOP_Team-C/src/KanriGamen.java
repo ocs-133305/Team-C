@@ -12,6 +12,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class KanriGamen extends JFrame {
@@ -40,6 +42,16 @@ public class KanriGamen extends JFrame {
 	private JLabel uaddressLabel;
 	private JTextField uaddressField;
 	private JTextField upostField;
+	private JLabel uphoneLabel;
+	private JTextField uphoneField;
+	private JLabel umailLabel;
+	private JTextField umailField;
+	
+	private String buf;
+	private	String sqlstr;		// SQL文格納
+	private String[] sqlret = new String[6];	//　問い合わせ結果（一行）格納
+	private int i;
+	private int uidval;
 
 	/**
 	 * Launch the application.
@@ -228,6 +240,38 @@ public class KanriGamen extends JFrame {
 		
 		//　会員検索ボタン
 		JButton usearchButton = new JButton("\u691C\u7D22");	//　「検索」
+		//　ボタンが押されたとき、テキストフィールドの内容が正しければselect文を飛ばして既存の会員情報を各領域に表示する
+		usearchButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				buf = uidField.getText();
+				if(buf.length() == 8){		// 文字数チェック
+					try{
+						
+						uidval = Integer.parseInt(buf);	//　uidvalにintで格納（不要？）
+						//　SQL文構築（仮）
+						sqlstr = "hoge" + uidval;
+						//　DB問い合わせ（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
+						for(i = 0; i < sqlret.length; i++){
+							sqlret[i] = "kekka" + i;
+						}
+						//　各領域に表示
+						unameField.setText(sqlret[1]);
+						uaddressField.setText(sqlret[2]);
+						upostField.setText(sqlret[3]);
+						uphoneField.setText(sqlret[4]);
+						umailField.setText(sqlret[5]);
+						
+					}catch(ArithmeticException e){	//　数値変換に失敗
+						messageField.setText("会員番号：数値以外が入力されています");
+					}catch(Exception e){			//　予期せぬエラー
+						messageField.setText("会員番号：エラー");
+					}
+				}else{
+					messageField.setText("会員番号：8桁の数値を入力してください");
+				}
+			}
+		});
 		//　tip「既存の会員を検索します」
 		usearchButton.setToolTipText("\u65E2\u5B58\u306E\u4F1A\u54E1\u3092\u691C\u7D22\u3057\u307E\u3059");
 		usearchButton.setBounds(345, 9, 101, 25);
@@ -251,7 +295,7 @@ public class KanriGamen extends JFrame {
 		
 		//　住所表示/入力領域
 		uaddressField = new JTextField();
-		uaddressField.setBounds(114, 69, 219, 22);
+		uaddressField.setBounds(114, 68, 219, 22);
 		userEdit.add(uaddressField);
 		uaddressField.setColumns(10);
 		
@@ -262,9 +306,31 @@ public class KanriGamen extends JFrame {
 		
 		//　郵便番号表示/入力領域
 		upostField = new JTextField();
-		upostField.setBounds(114, 98, 219, 22);
+		upostField.setBounds(114, 97, 219, 22);
 		userEdit.add(upostField);
 		upostField.setColumns(10);
+		
+		// ラベル「電話番号」
+		uphoneLabel = new JLabel("\u96FB\u8A71\u756A\u53F7");
+		uphoneLabel.setBounds(12, 129, 50, 16);
+		userEdit.add(uphoneLabel);
+		
+		//　電話番号表示/入力領域
+		uphoneField = new JTextField();
+		uphoneField.setBounds(114, 126, 219, 22);
+		userEdit.add(uphoneField);
+		uphoneField.setColumns(10);
+		
+		// ラベル「メールアドレス」
+		umailLabel = new JLabel("\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9");
+		umailLabel.setBounds(12, 158, 70, 16);
+		userEdit.add(umailLabel);
+		
+		//　メールアドレス表示/入力領域
+		umailField = new JTextField();
+		umailField.setBounds(114, 155, 219, 22);
+		userEdit.add(umailField);
+		umailField.setColumns(10);
 		
 	}
 }
