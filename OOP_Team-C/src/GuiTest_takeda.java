@@ -20,6 +20,9 @@ import javax.swing.ListSelectionModel;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.Box;
+import javax.swing.border.EtchedBorder;
+import java.awt.Component;
 
 
 public class GuiTest_takeda extends JFrame {
@@ -132,6 +135,16 @@ public class GuiTest_takeda extends JFrame {
 		JLabel label_3 = new JLabel("\u3042\u3044\u3046");
 		label_3.setBounds(31, 175, 57, 16);
 		panel.add(label_3);
+		
+		Box horizontalBox = Box.createHorizontalBox();
+		horizontalBox.setFont(null);
+		horizontalBox.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		horizontalBox.setBounds(12, 206, 472, 51);
+		panel.add(horizontalBox);
+		
+		Component horizontalStrut = Box.createHorizontalStrut(20);
+		horizontalStrut.setBounds(12, 140, 472, 42);
+		panel.add(horizontalStrut);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("ê}èëä«óù", null, panel_1, null);

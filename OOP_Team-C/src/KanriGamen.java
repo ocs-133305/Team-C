@@ -1,20 +1,16 @@
 import java.awt.EventQueue;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Component;
-import javax.swing.Box;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JComboBox;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 public class KanriGamen extends JFrame {
@@ -24,15 +20,24 @@ public class KanriGamen extends JFrame {
 	private JTabbedPane tabbedPane;
 	private JPanel userEdit;
 	private JTextField bidField;
-	private JLabel label_1;
-	private JLabel label_2;
-	private JLabel label_3;
-	private JLabel label_4;
+	private JLabel btitleLabel;
+	private JLabel bauthorLabel;
+	private JLabel bnumLabel;
+	private JLabel bclassLabel;
 	private JTextField btitleField;
 	private JTextField bauthorField;
 	private JButton addButton;
 	private JButton updateButton;
 	private JButton deleteButton;
+	private JTextField companyField;
+	private JTextField isbnField;
+	private JLabel isbnLabel;
+	private JLabel uidLabel;
+	private JTextField uidField;
+	private JLabel unameLabel;
+	private JTextField unameField;
+	private JLabel uaddressLabel;
+	private JTextField uaddressField;
 
 	/**
 	 * Launch the application.
@@ -108,9 +113,9 @@ public class KanriGamen extends JFrame {
 		bookEdit.setLayout(null);
 		
 		//　ラベル「図書管理番号」
-		JLabel label = new JLabel("\u56F3\u66F8\u7BA1\u7406\u756A\u53F7");
-		label.setBounds(12, 13, 90, 16);
-		bookEdit.add(label);
+		JLabel bidLabel = new JLabel("\u56F3\u66F8\u7BA1\u7406\u756A\u53F7");
+		bidLabel.setBounds(12, 13, 90, 16);
+		bookEdit.add(bidLabel);
 		
 		// 図書管理番号入力フィールド
 		bidField = new JTextField();
@@ -118,61 +123,135 @@ public class KanriGamen extends JFrame {
 		bookEdit.add(bidField);
 		bidField.setColumns(10);
 		
-		//　検索ボタン
-		JButton searchButton = new JButton("\u691C\u7D22");	// 「検索」
+		//　図書検索ボタン
+		JButton bsearchButton = new JButton("\u691C\u7D22");	// 「検索」
 		//　tip「既存の図書を検索します」
-		searchButton.setToolTipText("\u65E2\u5B58\u306E\u56F3\u66F8\u3092\u691C\u7D22\u3057\u307E\u3059");
-		searchButton.setBounds(345, 9, 101, 25);
-		bookEdit.add(searchButton);
+		bsearchButton.setToolTipText("\u65E2\u5B58\u306E\u56F3\u66F8\u3092\u691C\u7D22\u3057\u307E\u3059");
+		bsearchButton.setBounds(345, 9, 101, 25);
+		bookEdit.add(bsearchButton);
 		
 		//　ラベル「タイトル」
-		label_1 = new JLabel("\u30BF\u30A4\u30C8\u30EB");
-		label_1.setBounds(12, 42, 57, 16);
-		bookEdit.add(label_1);
+		btitleLabel = new JLabel("\u30BF\u30A4\u30C8\u30EB");
+		btitleLabel.setBounds(12, 42, 57, 16);
+		bookEdit.add(btitleLabel);
 		
-		// タイトル表示領域
+		// タイトル表示/入力領域
 		btitleField = new JTextField();
 		btitleField.setBounds(114, 39, 219, 22);
 		bookEdit.add(btitleField);
 		btitleField.setColumns(10);
 		
 		//　ラベル「著者」
-		label_2 = new JLabel("\u8457\u8005");
-		label_2.setBounds(12, 71, 57, 16);
-		bookEdit.add(label_2);
+		bauthorLabel = new JLabel("\u8457\u8005");
+		bauthorLabel.setBounds(12, 71, 57, 16);
+		bookEdit.add(bauthorLabel);
 		
-		//　著者表示領域
+		//　著者表示/入力領域
 		bauthorField = new JTextField();
 		bauthorField.setBounds(114, 68, 219, 22);
 		bookEdit.add(bauthorField);
 		bauthorField.setColumns(10);
 		
 		//　ラベル「冊数」
-		label_3 = new JLabel("\u518A\u6570");
-		label_3.setBounds(12, 100, 57, 16);
-		bookEdit.add(label_3);
+		bnumLabel = new JLabel("\u518A\u6570");
+		bnumLabel.setBounds(12, 193, 57, 16);
+		bookEdit.add(bnumLabel);
 		
 		//　冊数選択スピナー
-		JSpinner bSpinner = new JSpinner();
-		bSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
-		bSpinner.setBounds(114, 97, 40, 22);
-		bookEdit.add(bSpinner);
+		JSpinner bnumSpinner = new JSpinner();
+		bnumSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
+		bnumSpinner.setBounds(114, 190, 40, 22);
+		bookEdit.add(bnumSpinner);
 		
 		//　ラベル「分類」
-		label_4 = new JLabel("\u5206\u985E");
-		label_4.setBounds(12, 129, 57, 16);
-		bookEdit.add(label_4);
+		bclassLabel = new JLabel("\u5206\u985E");
+		bclassLabel.setBounds(12, 161, 57, 16);
+		bookEdit.add(bclassLabel);
 		
 		//　分類コンボボックス
 		JComboBox bclassComboBox = new JComboBox();
-		bclassComboBox.setBounds(114, 126, 110, 22);
+		bclassComboBox.setBounds(114, 158, 110, 22);
 		bookEdit.add(bclassComboBox);
+		
+		//　ラベル「出版社」
+		JLabel companyLabel = new JLabel("\u51FA\u7248\u793E");
+		companyLabel.setBounds(12, 100, 57, 16);
+		bookEdit.add(companyLabel);
+		
+		// 出版社表示/入力領域
+		companyField = new JTextField();
+		companyField.setBounds(114, 97, 219, 22);
+		bookEdit.add(companyField);
+		companyField.setColumns(10);
+		
+		// ラベル「ISBN」
+		isbnLabel = new JLabel("ISBN");
+		isbnLabel.setBounds(12, 129, 57, 16);
+		bookEdit.add(isbnLabel);
+		
+		//　ISBN表示/入力領域
+		isbnField = new JTextField();
+		isbnField.setBounds(114, 126, 160, 22);
+		bookEdit.add(isbnField);
+		isbnField.setColumns(10);
+		
+		// ラベル「-」
+		JLabel isbnLabel_2 = new JLabel("-");
+		isbnLabel_2.setBounds(286, 132, 13, 16);
+		bookEdit.add(isbnLabel_2);
+		
+		//　ISBNチェックスピナー　・・・ ISBN下一桁はチェックコードとして扱われる　が、実装は未定
+		JSpinner isbnSpinner = new JSpinner();
+		isbnSpinner.setModel(new SpinnerNumberModel(0, 0, 9, 1));
+		isbnSpinner.setBounds(303, 126, 30, 22);
+		bookEdit.add(isbnSpinner);
+		
 		
 	//　会員管理タブ
 		userEdit = new JPanel();
 		//　タイトル「会員管理」	tip「会員の追加・変更・削除」
 		tabbedPane.addTab("\u4F1A\u54E1\u7BA1\u7406", null, userEdit, "\u4F1A\u54E1\u306E\u8FFD\u52A0\u30FB\u5909\u66F4\u30FB\u524A\u9664");
 		userEdit.setLayout(null);
+		
+		// ラベル「会員番号」
+		uidLabel = new JLabel("\u4F1A\u54E1\u756A\u53F7");
+		uidLabel.setBounds(12, 13, 60, 16);
+		userEdit.add(uidLabel);
+		
+		//　会員番号表示/入力領域
+		uidField = new JTextField();
+		uidField.setBounds(114, 10, 219, 22);
+		userEdit.add(uidField);
+		uidField.setColumns(10);
+		
+		//　会員検索ボタン
+		JButton usearchButton = new JButton("\u691C\u7D22");	//　「検索」
+		//　tip「既存の会員を検索します」
+		usearchButton.setToolTipText("\u65E2\u5B58\u306E\u4F1A\u54E1\u3092\u691C\u7D22\u3057\u307E\u3059");
+		usearchButton.setBounds(345, 9, 101, 25);
+		userEdit.add(usearchButton);
+		
+		// ラベル「氏名」
+		unameLabel = new JLabel("\u6C0F\u540D");
+		unameLabel.setBounds(12, 42, 57, 16);
+		userEdit.add(unameLabel);
+		
+		//　氏名表示/入力領域
+		unameField = new JTextField();
+		unameField.setBounds(114, 39, 219, 22);
+		userEdit.add(unameField);
+		unameField.setColumns(10);
+		
+		// ラベル「住所」
+		uaddressLabel = new JLabel("\u4F4F\u6240");
+		uaddressLabel.setBounds(12, 71, 57, 16);
+		userEdit.add(uaddressLabel);
+		
+		//　住所表示/入力領域
+		uaddressField = new JTextField();
+		uaddressField.setBounds(114, 68, 219, 22);
+		userEdit.add(uaddressField);
+		uaddressField.setColumns(10);
 		
 	}
 }
