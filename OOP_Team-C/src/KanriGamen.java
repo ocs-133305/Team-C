@@ -1,4 +1,6 @@
 import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,9 +13,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 
 public class KanriGamen extends JFrame {
@@ -29,9 +28,9 @@ public class KanriGamen extends JFrame {
 	private JLabel bclassLabel;
 	private JTextField btitleField;
 	private JTextField bauthorField;
-	private JButton addButton;
-	private JButton updateButton;
-	private JButton deleteButton;
+	private JButton uaddButton;
+	private JButton uupdateButton;
+	private JButton udeleteButton;
 	private JTextField companyField;
 	private JTextField isbnField;
 	private JLabel isbnLabel;
@@ -102,23 +101,8 @@ public class KanriGamen extends JFrame {
 		
 		// タブ領域
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(12, 86, 570, 369);
+		tabbedPane.setBounds(12, 86, 570, 426);
 		contentPane.add(tabbedPane);
-		
-		// 追加ボタン
-		addButton = new JButton("\u8FFD\u52A0");		//　「追加」
-		addButton.setBounds(12, 468, 182, 36);
-		contentPane.add(addButton);
-		
-		//　変更ボタン
-		updateButton = new JButton("\u5909\u66F4");		//　「変更」
-		updateButton.setBounds(206, 468, 182, 36);
-		contentPane.add(updateButton);
-		
-		//　削除ボタン
-		deleteButton = new JButton("\u524A\u9664");		//　「削除」
-		deleteButton.setBounds(400, 468, 182, 36);
-		contentPane.add(deleteButton);
 		
 	// 図書管理タブ
 		JPanel bookEdit = new JPanel();
@@ -251,7 +235,7 @@ public class KanriGamen extends JFrame {
 						uidval = Integer.parseInt(buf);	//　uidvalにintで格納（不要？）
 						//　SQL文構築（仮）
 						sqlstr = "hoge" + uidval;
-						//　DB問い合わせ（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
+						//　SQL実行（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
 						for(i = 0; i < sqlret.length; i++){
 							sqlret[i] = "kekka" + i;
 						}
@@ -261,11 +245,15 @@ public class KanriGamen extends JFrame {
 						upostField.setText(sqlret[3]);
 						uphoneField.setText(sqlret[4]);
 						umailField.setText(sqlret[5]);
+						// メッセージの表示
+						messageField.setText("会員番号：" + uidval + "の情報を表示します");
+						//　削除ボタンを有効化
+						udeleteButton.setEnabled(true);
 						
 					}catch(ArithmeticException e){	//　数値変換に失敗
 						messageField.setText("会員番号：数値以外が入力されています");
 					}catch(Exception e){			//　予期せぬエラー
-						messageField.setText("会員番号：エラー");
+						messageField.setText("会員番号：予期せぬエラーが発生しました");
 					}
 				}else{
 					messageField.setText("会員番号：8桁の数値を入力してください");
@@ -331,6 +319,48 @@ public class KanriGamen extends JFrame {
 		umailField.setBounds(114, 155, 219, 22);
 		userEdit.add(umailField);
 		umailField.setColumns(10);
+		
+		//　会員追加ボタン
+		uaddButton = new JButton("\u8FFD\u52A0");		//　「追加」
+		uaddButton.setBounds(12, 353, 174, 36);
+		userEdit.add(uaddButton);
+		//　デフォルトではボタンを無効化しておく
+		uaddButton.setEnabled(false);
+		
+		//　会員削除ボタン
+		udeleteButton = new JButton("\u524A\u9664");		//　「削除」
+		udeleteButton.setBounds(379, 353, 174, 36);
+		userEdit.add(udeleteButton);
+		//　ボタンが押されたとき、対応するレコードを削除する　
+		udeleteButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try{
+					
+					//　SQL文構築（仮）
+					sqlstr = "hoge" + uidval;
+					//　SQL実行（仮）
+					
+					//　メッセージ表示
+					messageField.setText("会員番号：" + uidval + "の情報を削除しました");
+					//　削除ボタン無効化
+					udeleteButton.setEnabled(false);
+					//　各領域をクリア
+					
+				}catch(Exception e){
+					messageField.setText("会員の削除：予期せぬエラーが発生しました");
+				}
+			}
+		});
+		//　デフォルトではボタンを無効化しておく
+		udeleteButton.setEnabled(false);
+		
+		//　会員変更ボタン
+		uupdateButton = new JButton("\u5909\u66F4");		//　「変更」
+		uupdateButton.setBounds(195, 353, 172, 36);
+		userEdit.add(uupdateButton);
+		//　デフォルトではボタンを無効化しておく
+		uupdateButton.setEnabled(false);
 		
 	}
 }
