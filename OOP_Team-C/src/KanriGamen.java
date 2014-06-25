@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import java.awt.Font;
 
 
 public class KanriGamen extends JFrame {
@@ -38,6 +39,7 @@ public class KanriGamen extends JFrame {
 	private JTextField unameField;
 	private JLabel uaddressLabel;
 	private JTextField uaddressField;
+	private JTextField upostField;
 
 	/**
 	 * Launch the application.
@@ -249,9 +251,20 @@ public class KanriGamen extends JFrame {
 		
 		//　住所表示/入力領域
 		uaddressField = new JTextField();
-		uaddressField.setBounds(114, 68, 219, 22);
+		uaddressField.setBounds(114, 69, 219, 22);
 		userEdit.add(uaddressField);
 		uaddressField.setColumns(10);
+		
+		// ラベル「郵便番号」
+		JLabel upostLabel = new JLabel("\u90F5\u4FBF\u756A\u53F7");
+		upostLabel.setBounds(12, 100, 60, 16);
+		userEdit.add(upostLabel);
+		
+		//　郵便番号表示/入力領域
+		upostField = new JTextField();
+		upostField.setBounds(114, 98, 219, 22);
+		userEdit.add(upostField);
+		upostField.setColumns(10);
 		
 	}
 }
