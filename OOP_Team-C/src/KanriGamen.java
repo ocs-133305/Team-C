@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class KanriGamen extends JFrame {
@@ -47,10 +49,12 @@ public class KanriGamen extends JFrame {
 	private JTextField umailField;
 	
 	private String buf;
-	private	String sqlstr;		// SQL文格納
+	private	String sqlstr;		// SQL文格納も
+	private String[] insertstr = new String[6];	// レコード挿入用配列
 	private String[] sqlret = new String[6];	//　問い合わせ結果（一行）格納
 	private int i;
 	private int uidval;
+	private JButton clearButton;
 
 	/**
 	 * Launch the application.
@@ -249,6 +253,8 @@ public class KanriGamen extends JFrame {
 						messageField.setText("会員番号：" + uidval + "の情報を表示します");
 						//　削除ボタンを有効化
 						udeleteButton.setEnabled(true);
+						// 会員番号を編集不可に
+						uidField.setEditable(false);
 						
 					}catch(ArithmeticException e){	//　数値変換に失敗
 						messageField.setText("会員番号：数値以外が入力されています");
@@ -262,7 +268,7 @@ public class KanriGamen extends JFrame {
 		});
 		//　tip「既存の会員を検索します」
 		usearchButton.setToolTipText("\u65E2\u5B58\u306E\u4F1A\u54E1\u3092\u691C\u7D22\u3057\u307E\u3059");
-		usearchButton.setBounds(345, 9, 101, 25);
+		usearchButton.setBounds(345, 9, 98, 25);
 		userEdit.add(usearchButton);
 		
 		// ラベル「氏名」
@@ -272,6 +278,22 @@ public class KanriGamen extends JFrame {
 		
 		//　氏名表示/入力領域
 		unameField = new JTextField();
+		unameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+				// そうでなければ変更処理とみなす
+				if(uidField.getText().equals("")){
+					//　会員番号を編集不可に
+					uidField.setEditable(false);
+					//　追加ボタン有効化
+					uaddButton.setEnabled(true);
+				}else{
+					// 変更ボタン有効化
+					uupdateButton.setEnabled(true);
+				}
+			}
+		});
 		unameField.setBounds(114, 39, 219, 22);
 		userEdit.add(unameField);
 		unameField.setColumns(10);
@@ -283,6 +305,22 @@ public class KanriGamen extends JFrame {
 		
 		//　住所表示/入力領域
 		uaddressField = new JTextField();
+		uaddressField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+				// そうでなければ変更処理とみなす
+				if(uidField.getText().equals("")){
+					//　会員番号を編集不可に
+					uidField.setEditable(false);
+					//　追加ボタン有効化
+					uaddButton.setEnabled(true);
+				}else{
+					// 変更ボタン有効化
+					uupdateButton.setEnabled(true);
+				}
+			}
+		});
 		uaddressField.setBounds(114, 68, 219, 22);
 		userEdit.add(uaddressField);
 		uaddressField.setColumns(10);
@@ -294,6 +332,22 @@ public class KanriGamen extends JFrame {
 		
 		//　郵便番号表示/入力領域
 		upostField = new JTextField();
+		upostField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+				// そうでなければ変更処理とみなす
+				if(uidField.getText().equals("")){
+					//　会員番号を編集不可に
+					uidField.setEditable(false);
+					//　追加ボタン有効化
+					uaddButton.setEnabled(true);
+				}else{
+					// 変更ボタン有効化
+					uupdateButton.setEnabled(true);
+				}
+			}
+		});
 		upostField.setBounds(114, 97, 219, 22);
 		userEdit.add(upostField);
 		upostField.setColumns(10);
@@ -305,6 +359,22 @@ public class KanriGamen extends JFrame {
 		
 		//　電話番号表示/入力領域
 		uphoneField = new JTextField();
+		uphoneField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+				// そうでなければ変更処理とみなす
+				if(uidField.getText().equals("")){
+					//　会員番号を編集不可に
+					uidField.setEditable(false);
+					//　追加ボタン有効化
+					uaddButton.setEnabled(true);
+				}else{
+					// 変更ボタン有効化
+					uupdateButton.setEnabled(true);
+				}
+			}
+		});
 		uphoneField.setBounds(114, 126, 219, 22);
 		userEdit.add(uphoneField);
 		uphoneField.setColumns(10);
@@ -316,12 +386,37 @@ public class KanriGamen extends JFrame {
 		
 		//　メールアドレス表示/入力領域
 		umailField = new JTextField();
+		umailField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+				// そうでなければ変更処理とみなす
+				if(uidField.getText().equals("")){
+					//　会員番号を編集不可に
+					uidField.setEditable(false);
+					//　追加ボタン有効化
+					uaddButton.setEnabled(true);
+				}else{
+					// 変更ボタン有効化
+					uupdateButton.setEnabled(true);
+				}
+			}
+		});
 		umailField.setBounds(114, 155, 219, 22);
 		userEdit.add(umailField);
 		umailField.setColumns(10);
 		
 		//　会員追加ボタン
 		uaddButton = new JButton("\u8FFD\u52A0");		//　「追加」
+		//　ボタンが押されたとき、入力内容をチェックして正しければレコードを追加する
+		uaddButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(true){
+					
+				}
+			}
+		});
 		uaddButton.setBounds(12, 353, 174, 36);
 		userEdit.add(uaddButton);
 		//　デフォルトではボタンを無効化しておく
@@ -346,6 +441,13 @@ public class KanriGamen extends JFrame {
 					//　削除ボタン無効化
 					udeleteButton.setEnabled(false);
 					//　各領域をクリア
+					uidField.setText("");
+					uidField.setEditable(true);
+					unameField.setText("");
+					uaddressField.setText("");
+					upostField.setText("");
+					uphoneField.setText("");
+					umailField.setText("");
 					
 				}catch(Exception e){
 					messageField.setText("会員の削除：予期せぬエラーが発生しました");
@@ -361,6 +463,34 @@ public class KanriGamen extends JFrame {
 		userEdit.add(uupdateButton);
 		//　デフォルトではボタンを無効化しておく
 		uupdateButton.setEnabled(false);
+		
+		//　編集クリアボタン	編集途中でのキャンセルに使用する
+		clearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
+		//　「編集をキャンセルします」
+		clearButton.setToolTipText("\u7DE8\u96C6\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3059");
+		clearButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//　各領域のクリア
+				uidField.setText("");
+				uidField.setEditable(true);
+				unameField.setText("");
+				uaddressField.setText("");
+				upostField.setText("");
+				uphoneField.setText("");
+				umailField.setText("");
+				
+				//　各編集ボタンの無効化
+				uaddButton.setEnabled(false);
+				uupdateButton.setEnabled(false);
+				udeleteButton.setEnabled(false);
+				
+				//　メッセージ表示
+				messageField.setText("編集をキャンセルしました");
+			}
+		});
+		clearButton.setBounds(452, 9, 101, 25);
+		userEdit.add(clearButton);
 		
 	}
 }
