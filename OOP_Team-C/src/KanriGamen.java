@@ -49,11 +49,13 @@ public class KanriGamen extends JFrame {
 	private JTextField umailField;
 	
 	private String buf;
-	private	String sqlstr;		// SQL文格納も
-	private String[] insertstr = new String[6];	// レコード挿入用配列
+	private	String sqlstr;		// SQL文格納
+//	private String[] insertstr = new String[6];	// レコード挿入用配列
 	private String[] sqlret = new String[6];	//　問い合わせ結果（一行）格納
 	private int i;
-	private int uidval;
+	private int uidval, upostval;				// 会員番号、郵便番号
+	private long uphoneval;						//　電話番号
+	private String uname, uaddress, umail;		// 氏名、住所、メールアドレス
 	private JButton clearButton;
 
 	/**
@@ -170,7 +172,7 @@ public class KanriGamen extends JFrame {
 		bclassLabel.setBounds(12, 161, 57, 16);
 		bookEdit.add(bclassLabel);
 		
-		//　分類コンボボックス
+		//　分類コンボボックス		要・SQLによる項目取得
 		JComboBox bclassComboBox = new JComboBox();
 		bclassComboBox.setBounds(114, 158, 110, 22);
 		bookEdit.add(bclassComboBox);
@@ -256,7 +258,7 @@ public class KanriGamen extends JFrame {
 						// 会員番号を編集不可に
 						uidField.setEditable(false);
 						
-					}catch(ArithmeticException e){	//　数値変換に失敗
+					}catch(NumberFormatException e){	//　数値変換に失敗
 						messageField.setText("会員番号：数値以外が入力されています");
 					}catch(Exception e){			//　予期せぬエラー
 						messageField.setText("会員番号：予期せぬエラーが発生しました");
@@ -354,7 +356,7 @@ public class KanriGamen extends JFrame {
 		
 		// ラベル「電話番号」
 		uphoneLabel = new JLabel("\u96FB\u8A71\u756A\u53F7");
-		uphoneLabel.setBounds(12, 129, 50, 16);
+		uphoneLabel.setBounds(12, 129, 60, 16);
 		userEdit.add(uphoneLabel);
 		
 		//　電話番号表示/入力領域
@@ -381,7 +383,7 @@ public class KanriGamen extends JFrame {
 		
 		// ラベル「メールアドレス」
 		umailLabel = new JLabel("\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9");
-		umailLabel.setBounds(12, 158, 70, 16);
+		umailLabel.setBounds(12, 158, 90, 16);
 		userEdit.add(umailLabel);
 		
 		//　メールアドレス表示/入力領域
@@ -412,8 +414,55 @@ public class KanriGamen extends JFrame {
 		uaddButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(true){
+				// 各項目の長さチェック
+				if(unameField.getText().length() > 20 || unameField.getText().length() == 0){
+					messageField.setText("エラー：氏名を20文字以内で入力してください");
+				}else if(uaddressField.getText().length() > 30 || uaddressField.getText().length() == 0){
+					messageField.setText("エラー：住所を30文字以内で入力してください");
+				}else if(upostField.getText().length() != 7){
+					messageField.setText("エラー：郵便番号を7桁で入力してください");
+				}else if(uphoneField.getText().length() != 10 && uphoneField.getText().length() != 11){
+					messageField.setText("エラー：電話番号を正しく入力してください");
+				}else if(umailField.getText().length() > 50){
+					messageField.setText("エラー：メールアドレスは50文字以内で入力してください");
+				}else{	//　本処理
+					try{
+						upostval = Integer.parseInt(upostField.getText());
+					}catch(NumberFormatException poste){
+						messageField.setText("エラー：郵便番号に数字以外が入力されています");
+					}
+					try{
+						uphoneval = Long.parseLong(uphoneField.getText());
+					}catch(NumberFormatException phonee){
+						messageField.setText("エラー：電話番号に数字以外が入力されています");
+					}
+					//　以上はエラーチェック仮
+					//　以下本処理
 					
+					//　いったん格納
+					uname = unameField.getText();
+					uaddress = uaddressField.getText();
+					umail = umailField.getText();
+					
+					//　SQLを使った処理（会員番号の決定、インサート）
+					
+					
+					//　メッセージ表示
+					messageField.setText("会員番号：" + uidval + "として登録しました");
+					
+					//　各領域のクリア
+					uidField.setText("");
+					uidField.setEditable(true);
+					unameField.setText("");
+					uaddressField.setText("");
+					upostField.setText("");
+					uphoneField.setText("");
+					umailField.setText("");
+					
+					//　各編集ボタンの無効化
+					uaddButton.setEnabled(false);
+					uupdateButton.setEnabled(false);
+					udeleteButton.setEnabled(false);
 				}
 			}
 		});
@@ -436,10 +485,10 @@ public class KanriGamen extends JFrame {
 					sqlstr = "hoge" + uidval;
 					//　SQL実行（仮）
 					
+					
 					//　メッセージ表示
 					messageField.setText("会員番号：" + uidval + "の情報を削除しました");
-					//　削除ボタン無効化
-					udeleteButton.setEnabled(false);
+					
 					//　各領域をクリア
 					uidField.setText("");
 					uidField.setEditable(true);
@@ -448,6 +497,11 @@ public class KanriGamen extends JFrame {
 					upostField.setText("");
 					uphoneField.setText("");
 					umailField.setText("");
+					
+					//　各編集ボタンの無効化
+					uaddButton.setEnabled(false);
+					uupdateButton.setEnabled(false);
+					udeleteButton.setEnabled(false);
 					
 				}catch(Exception e){
 					messageField.setText("会員の削除：予期せぬエラーが発生しました");
@@ -459,6 +513,37 @@ public class KanriGamen extends JFrame {
 		
 		//　会員変更ボタン
 		uupdateButton = new JButton("\u5909\u66F4");		//　「変更」
+		uupdateButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try{
+					//　SQL文構築（仮）
+					sqlstr = "hoge";
+					//　SQL実行（仮）
+					
+					
+					//　メッセージの表示
+					messageField.setText("会員番号：" + uidval + "の情報を更新しました");
+					
+					//　各領域のクリア
+					uidField.setText("");
+					uidField.setEditable(true);
+					unameField.setText("");
+					uaddressField.setText("");
+					upostField.setText("");
+					uphoneField.setText("");
+					umailField.setText("");
+					
+					//　各編集ボタンの無効化
+					uaddButton.setEnabled(false);
+					uupdateButton.setEnabled(false);
+					udeleteButton.setEnabled(false);
+					
+				}catch(Exception e){
+					messageField.setText("会員情報の変更：予期せぬエラーが発生しました");
+				}
+			}
+		});
 		uupdateButton.setBounds(195, 353, 172, 36);
 		userEdit.add(uupdateButton);
 		//　デフォルトではボタンを無効化しておく
@@ -471,6 +556,9 @@ public class KanriGamen extends JFrame {
 		clearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				//　メッセージ表示
+				messageField.setText("編集をキャンセルしました");
+				
 				//　各領域のクリア
 				uidField.setText("");
 				uidField.setEditable(true);
@@ -485,8 +573,6 @@ public class KanriGamen extends JFrame {
 				uupdateButton.setEnabled(false);
 				udeleteButton.setEnabled(false);
 				
-				//　メッセージ表示
-				messageField.setText("編集をキャンセルしました");
 			}
 		});
 		clearButton.setBounds(452, 9, 101, 25);
