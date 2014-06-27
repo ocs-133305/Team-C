@@ -1,7 +1,26 @@
+/* 大雑把なソースの構造
+ * ・本コメント
+ * ・各種インポート
+ * ・KanriGamenクラス
+ * 	・各種フィールド
+ * 	・メインメソッド（単体テスト用）
+ * 	・コンストラクタ
+ * 		・メイン領域
+ * 		・図書管理タブ
+ * 		・会員管理タブ
+ * 	・図書タブクリアメソッド
+ * 	・会員タブクリアメソッド
+ */
+
+
+
 import java.awt.EventQueue;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -13,50 +32,71 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 
 public class KanriGamen extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField messageField;
-	private JTabbedPane tabbedPane;
-	private JPanel userEdit;
+	private JPanel contentPane;			// メインパネル
+	private JTextField messageField;	//　メッセージ表示領域
+	private JTabbedPane tabbedPane;		//　タブ領域
+
+	// 図書管理タブの部品
+	private JPanel bookEdit;
+	private JLabel bidLabel;
 	private JTextField bidField;
+	private JButton	bsearchButton;
+	private JButton bclearButton;
 	private JLabel btitleLabel;
-	private JLabel bauthorLabel;
-	private JLabel bnumLabel;
-	private JLabel bclassLabel;
 	private JTextField btitleField;
+	private JLabel bauthorLabel;
 	private JTextField bauthorField;
-	private JButton uaddButton;
-	private JButton uupdateButton;
-	private JButton udeleteButton;
+	private JLabel companyLabel;
 	private JTextField companyField;
-	private JTextField isbnField;
 	private JLabel isbnLabel;
+	private JTextField isbnField;
+	private JLabel isbnLabel_2;
+	private JSpinner isbnSpinner;
+	private JLabel bclassLabel;
+	private JComboBox<?> bclassComboBox;
+	private JLabel bnumLabel;
+	private JSpinner bnumSpinner;
+	private JButton baddButton;
+	private JButton bupdateButton;
+	private JButton bdeleteButton;
+	private JButton uclearButton;
+	
+	//　会員管理タブの部品
+	private JPanel userEdit;
 	private JLabel uidLabel;
 	private JTextField uidField;
+	private JButton usearchButton;
 	private JLabel unameLabel;
 	private JTextField unameField;
 	private JLabel uaddressLabel;
 	private JTextField uaddressField;
+	private JLabel upostLabel;
 	private JTextField upostField;
 	private JLabel uphoneLabel;
 	private JTextField uphoneField;
 	private JLabel umailLabel;
 	private JTextField umailField;
+	private JButton uaddButton;
+	private JButton uupdateButton;
+	private JButton udeleteButton;
 	
+	//　作業用変数
 	private String buf;
-	private	String sqlstr;		// SQL文格納
+	private	String sqlstr;						// SQL文格納
 //	private String[] insertstr = new String[6];	// レコード挿入用配列
 	private String[] sqlret = new String[6];	//　問い合わせ結果（一行）格納
 	private int i;
+	private int bidval, checkval;				// 図書管理番号、チェックディジット
+	private long isbnval;						//　ISBN
+	private String btitle, bauthor, bclass;		// 図書名、著者、分類（ジャンル）
+	private String company;						// 出版社
 	private int uidval, upostval;				// 会員番号、郵便番号
 	private long uphoneval;						//　電話番号
 	private String uname, uaddress, umail;		// 氏名、住所、メールアドレス
-	private JButton clearButton;
 
 	/**
 	 * Launch the application.
@@ -111,13 +151,13 @@ public class KanriGamen extends JFrame {
 		contentPane.add(tabbedPane);
 		
 	// 図書管理タブ
-		JPanel bookEdit = new JPanel();
+		bookEdit = new JPanel();
 		// タイトル「図書管理」	tip「図書の追加・変更・削除」
 		tabbedPane.addTab("\u56F3\u66F8\u7BA1\u7406", null, bookEdit, "\u56F3\u66F8\u306E\u8FFD\u52A0\u30FB\u5909\u66F4\u30FB\u524A\u9664");
 		bookEdit.setLayout(null);
 		
 		//　ラベル「図書管理番号」
-		JLabel bidLabel = new JLabel("\u56F3\u66F8\u7BA1\u7406\u756A\u53F7");
+		bidLabel = new JLabel("\u56F3\u66F8\u7BA1\u7406\u756A\u53F7");
 		bidLabel.setBounds(12, 13, 90, 16);
 		bookEdit.add(bidLabel);
 		
@@ -128,10 +168,66 @@ public class KanriGamen extends JFrame {
 		bidField.setColumns(10);
 		
 		//　図書検索ボタン
-		JButton bsearchButton = new JButton("\u691C\u7D22");	// 「検索」
+		bsearchButton = new JButton("\u691C\u7D22");	// 「検索」
+		//　ボタンが押されたとき、テキストフィールドの内容が正しければselect文を飛ばして既存の図書情報を各領域に表示する
+		bsearchButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				buf = bidField.getText();
+				if(buf.length() == 8){		// 文字数チェック
+					try{
+						
+						bidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
+						
+						//　SQL文構築（仮）
+						sqlstr = "hoge" + bidval;
+						//　SQL実行（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
+						for(i = 0; i < sqlret.length; i++){
+							sqlret[i] = "kekka" + i;
+						}
+						sqlret[3] = "4";			// テスト用、分類番号
+						sqlret[5] = "1234567898";	// 同、ISBN
+						
+						//　ISBNを表示用にいじる（仮）		テキストフィールドとチェック用スピナーに分ける必要がある
+						isbnval = Long.parseLong(sqlret[5]);
+						checkval = (int)(isbnval % 10);
+						isbnval /= 10;
+						buf = Long.toString(isbnval);
+						
+						//　各領域に表示
+						btitleField.setText(sqlret[1]);
+						bauthorField.setText(sqlret[2]);
+						// コンボボックスで表示する文字の添え字を指定
+						bclassComboBox.setSelectedIndex(Integer.parseInt(sqlret[3]));
+						companyField.setText(sqlret[4]);
+						isbnField.setText(buf);
+						isbnSpinner.setValue(checkval);
+						
+						
+						// メッセージの表示
+						messageField.setText("図書管理番号：" + bidval + "の情報を表示します");
+						//　削除ボタンを有効化
+						bdeleteButton.setEnabled(true);
+						// 会員番号を編集不可に
+						bidField.setEditable(false);
+						// 冊数スピナーを無効化
+						bnumSpinner.setEnabled(false);
+						// 検索ボタンを無効化
+						bsearchButton.setEnabled(false);
+						
+					}catch(NumberFormatException e){	//　数値変換に失敗
+						messageField.setText("図書管理番号：数値以外が入力されています");
+					}catch(Exception e){			//　予期せぬエラー
+						messageField.setText("図書管理番号：予期せぬエラーが発生しました");
+					}
+				}else{
+					messageField.setText("図書管理番号：8桁の数値を入力してください");
+				}
+			}
+		});
 		//　tip「既存の図書を検索します」
 		bsearchButton.setToolTipText("\u65E2\u5B58\u306E\u56F3\u66F8\u3092\u691C\u7D22\u3057\u307E\u3059");
-		bsearchButton.setBounds(345, 9, 101, 25);
+		bsearchButton.setBounds(345, 9, 98, 25);
 		bookEdit.add(bsearchButton);
 		
 		//　ラベル「タイトル」
@@ -141,6 +237,12 @@ public class KanriGamen extends JFrame {
 		
 		// タイトル表示/入力領域
 		btitleField = new JTextField();
+		btitleField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				bfieldCheck();
+			}
+		});
 		btitleField.setBounds(114, 39, 219, 22);
 		bookEdit.add(btitleField);
 		btitleField.setColumns(10);
@@ -152,6 +254,12 @@ public class KanriGamen extends JFrame {
 		
 		//　著者表示/入力領域
 		bauthorField = new JTextField();
+		bauthorField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				bfieldCheck();
+			}
+		});
 		bauthorField.setBounds(114, 68, 219, 22);
 		bookEdit.add(bauthorField);
 		bauthorField.setColumns(10);
@@ -162,7 +270,7 @@ public class KanriGamen extends JFrame {
 		bookEdit.add(bnumLabel);
 		
 		//　冊数選択スピナー
-		JSpinner bnumSpinner = new JSpinner();
+		bnumSpinner = new JSpinner();
 		bnumSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
 		bnumSpinner.setBounds(114, 190, 40, 22);
 		bookEdit.add(bnumSpinner);
@@ -173,17 +281,25 @@ public class KanriGamen extends JFrame {
 		bookEdit.add(bclassLabel);
 		
 		//　分類コンボボックス		要・SQLによる項目取得
-		JComboBox bclassComboBox = new JComboBox();
+		bclassComboBox = new JComboBox();
+		// テスト用モデル	ここはSQLでclassテーブルの項目を持ってきてほしい
+		bclassComboBox.setModel(new DefaultComboBoxModel(new String[] {"1111", "2222", "3333", "4444", "5555", "6666", "7777"}));
 		bclassComboBox.setBounds(114, 158, 110, 22);
 		bookEdit.add(bclassComboBox);
 		
 		//　ラベル「出版社」
-		JLabel companyLabel = new JLabel("\u51FA\u7248\u793E");
+		companyLabel = new JLabel("\u51FA\u7248\u793E");
 		companyLabel.setBounds(12, 100, 57, 16);
 		bookEdit.add(companyLabel);
 		
 		// 出版社表示/入力領域
 		companyField = new JTextField();
+		companyField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				bfieldCheck();
+			}
+		});
 		companyField.setBounds(114, 97, 219, 22);
 		bookEdit.add(companyField);
 		companyField.setColumns(10);
@@ -195,20 +311,96 @@ public class KanriGamen extends JFrame {
 		
 		//　ISBN表示/入力領域
 		isbnField = new JTextField();
+		isbnField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				bfieldCheck();
+			}
+		});
 		isbnField.setBounds(114, 126, 160, 22);
 		bookEdit.add(isbnField);
 		isbnField.setColumns(10);
 		
 		// ラベル「-」
-		JLabel isbnLabel_2 = new JLabel("-");
+		isbnLabel_2 = new JLabel("-");
 		isbnLabel_2.setBounds(286, 132, 13, 16);
 		bookEdit.add(isbnLabel_2);
 		
 		//　ISBNチェックスピナー　・・・ ISBN下一桁はチェックコードとして扱われる　が、実装は未定
-		JSpinner isbnSpinner = new JSpinner();
+		isbnSpinner = new JSpinner();
 		isbnSpinner.setModel(new SpinnerNumberModel(0, 0, 9, 1));
 		isbnSpinner.setBounds(303, 126, 30, 22);
 		bookEdit.add(isbnSpinner);
+		
+		// 図書追加ボタン
+		baddButton = new JButton("\u8FFD\u52A0");		//　「追加」
+		baddButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// 各項目の長さチェック
+				if(btitleField.getText().length() > 60 || btitleField.getText().length() == 0){
+					messageField.setText("エラー：タイトルを60文字以内で入力してください");
+				}else if(bauthorField.getText().length() > 30 || bauthorField.getText().length() == 0){
+					messageField.setText("エラー：著者名を30文字以内で入力してください");
+				}else if(companyField.getText().length() > 20 || companyField.getText().length() == 0){
+					messageField.setText("エラー：出版社名を20文字以内で入力してください");
+				}else if(isbnField.getText().length() != 12){
+					messageField.setText("エラー：ISBNを12桁で入力してください");
+				}else if(isbnCheck(isbnField.getText(), (int) isbnSpinner.getValue())){
+					messageField.setText("エラー：ISBNの値が間違っています");
+				}else{	//　本処理
+					try{
+						isbnval = Long.parseLong(isbnField.getText());
+						
+						//　各項目をいったん変数に格納
+						btitle = btitleField.getText();
+						bauthor = bauthorField.getText();
+						company = companyField.getText();
+						
+						//　SQLを使った処理（会員番号の決定、インサート）
+						
+						
+						//　メッセージ表示
+						messageField.setText("会員番号：" + bidval + "として登録しました");
+						
+						//　各領域のクリア
+						clearBField();
+					}catch(NumberFormatException ise){
+						messageField.setText("エラー：ISBNに数字以外が入力されています");
+					}	
+				}
+			}
+		});
+		baddButton.setEnabled(false);		//　デフォルト無効
+		baddButton.setBounds(12, 347, 174, 36);
+		bookEdit.add(baddButton);
+		
+		// 図書変更ボタン
+		bupdateButton = new JButton("\u5909\u66F4");	//　「変更」
+		bupdateButton.setEnabled(false);	//　デフォルト無効
+		bupdateButton.setBounds(195, 347, 172, 36);
+		bookEdit.add(bupdateButton);
+		
+		//　図書削除ボタン
+		bdeleteButton = new JButton("\u524A\u9664");	//　「削除」
+		bdeleteButton.setEnabled(false);	//　デフォルト無効
+		bdeleteButton.setBounds(379, 347, 174, 36);
+		bookEdit.add(bdeleteButton);
+		
+		//　編集クリアボタン	編集途中でのキャンセルに使用する
+		bclearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");	//　「キャンセル」
+		bclearButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				messageField.setText("編集をキャンセルしました");
+				
+				clearBField();
+			}
+		});
+		//　「編集をキャンセルします」
+		bclearButton.setToolTipText("\u7DE8\u96C6\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3059");
+		bclearButton.setBounds(452, 9, 101, 25);
+		bookEdit.add(bclearButton);
 		
 		
 	//　会員管理タブ
@@ -229,7 +421,7 @@ public class KanriGamen extends JFrame {
 		uidField.setColumns(10);
 		
 		//　会員検索ボタン
-		JButton usearchButton = new JButton("\u691C\u7D22");	//　「検索」
+		usearchButton = new JButton("\u691C\u7D22");	//　「検索」
 		//　ボタンが押されたとき、テキストフィールドの内容が正しければselect文を飛ばして既存の会員情報を各領域に表示する
 		usearchButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -257,6 +449,8 @@ public class KanriGamen extends JFrame {
 						udeleteButton.setEnabled(true);
 						// 会員番号を編集不可に
 						uidField.setEditable(false);
+						// 検索ボタンを無効化
+						usearchButton.setEnabled(true);
 						
 					}catch(NumberFormatException e){	//　数値変換に失敗
 						messageField.setText("会員番号：数値以外が入力されています");
@@ -283,17 +477,7 @@ public class KanriGamen extends JFrame {
 		unameField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
-				// そうでなければ変更処理とみなす
-				if(uidField.getText().equals("")){
-					//　会員番号を編集不可に
-					uidField.setEditable(false);
-					//　追加ボタン有効化
-					uaddButton.setEnabled(true);
-				}else{
-					// 変更ボタン有効化
-					uupdateButton.setEnabled(true);
-				}
+				ufieldCheck();
 			}
 		});
 		unameField.setBounds(114, 39, 219, 22);
@@ -310,17 +494,7 @@ public class KanriGamen extends JFrame {
 		uaddressField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
-				// そうでなければ変更処理とみなす
-				if(uidField.getText().equals("")){
-					//　会員番号を編集不可に
-					uidField.setEditable(false);
-					//　追加ボタン有効化
-					uaddButton.setEnabled(true);
-				}else{
-					// 変更ボタン有効化
-					uupdateButton.setEnabled(true);
-				}
+				ufieldCheck();
 			}
 		});
 		uaddressField.setBounds(114, 68, 219, 22);
@@ -328,7 +502,7 @@ public class KanriGamen extends JFrame {
 		uaddressField.setColumns(10);
 		
 		// ラベル「郵便番号」
-		JLabel upostLabel = new JLabel("\u90F5\u4FBF\u756A\u53F7");
+		upostLabel = new JLabel("\u90F5\u4FBF\u756A\u53F7");
 		upostLabel.setBounds(12, 100, 60, 16);
 		userEdit.add(upostLabel);
 		
@@ -337,17 +511,7 @@ public class KanriGamen extends JFrame {
 		upostField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
-				// そうでなければ変更処理とみなす
-				if(uidField.getText().equals("")){
-					//　会員番号を編集不可に
-					uidField.setEditable(false);
-					//　追加ボタン有効化
-					uaddButton.setEnabled(true);
-				}else{
-					// 変更ボタン有効化
-					uupdateButton.setEnabled(true);
-				}
+				ufieldCheck();
 			}
 		});
 		upostField.setBounds(114, 97, 219, 22);
@@ -364,17 +528,7 @@ public class KanriGamen extends JFrame {
 		uphoneField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
-				// そうでなければ変更処理とみなす
-				if(uidField.getText().equals("")){
-					//　会員番号を編集不可に
-					uidField.setEditable(false);
-					//　追加ボタン有効化
-					uaddButton.setEnabled(true);
-				}else{
-					// 変更ボタン有効化
-					uupdateButton.setEnabled(true);
-				}
+				ufieldCheck();
 			}
 		});
 		uphoneField.setBounds(114, 126, 219, 22);
@@ -383,7 +537,7 @@ public class KanriGamen extends JFrame {
 		
 		// ラベル「メールアドレス」
 		umailLabel = new JLabel("\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9");
-		umailLabel.setBounds(12, 158, 90, 16);
+		umailLabel.setBounds(12, 158, 106, 16);
 		userEdit.add(umailLabel);
 		
 		//　メールアドレス表示/入力領域
@@ -391,17 +545,7 @@ public class KanriGamen extends JFrame {
 		umailField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
-				// そうでなければ変更処理とみなす
-				if(uidField.getText().equals("")){
-					//　会員番号を編集不可に
-					uidField.setEditable(false);
-					//　追加ボタン有効化
-					uaddButton.setEnabled(true);
-				}else{
-					// 変更ボタン有効化
-					uupdateButton.setEnabled(true);
-				}
+				ufieldCheck();
 			}
 		});
 		umailField.setBounds(114, 155, 219, 22);
@@ -428,52 +572,40 @@ public class KanriGamen extends JFrame {
 				}else{	//　本処理
 					try{
 						upostval = Integer.parseInt(upostField.getText());
-					}catch(NumberFormatException poste){
+						try{
+							uphoneval = Long.parseLong(uphoneField.getText());
+							
+							//　各項目をいったん変数に格納
+							uname = unameField.getText();
+							uaddress = uaddressField.getText();
+							umail = umailField.getText();
+							
+							//　SQLを使った処理（会員番号の決定、インサート）
+							
+							
+							//　メッセージ表示
+							messageField.setText("会員番号：" + uidval + "として登録しました");
+							
+							//　各領域のクリア
+							clearUField();
+							
+						}catch(NumberFormatException pne){
+							messageField.setText("エラー：電話番号に数字以外が入力されています");
+						}
+					}catch(NumberFormatException pse){
 						messageField.setText("エラー：郵便番号に数字以外が入力されています");
 					}
-					try{
-						uphoneval = Long.parseLong(uphoneField.getText());
-					}catch(NumberFormatException phonee){
-						messageField.setText("エラー：電話番号に数字以外が入力されています");
-					}
-					//　以上はエラーチェック仮
-					//　以下本処理
-					
-					//　いったん格納
-					uname = unameField.getText();
-					uaddress = uaddressField.getText();
-					umail = umailField.getText();
-					
-					//　SQLを使った処理（会員番号の決定、インサート）
-					
-					
-					//　メッセージ表示
-					messageField.setText("会員番号：" + uidval + "として登録しました");
-					
-					//　各領域のクリア
-					uidField.setText("");
-					uidField.setEditable(true);
-					unameField.setText("");
-					uaddressField.setText("");
-					upostField.setText("");
-					uphoneField.setText("");
-					umailField.setText("");
-					
-					//　各編集ボタンの無効化
-					uaddButton.setEnabled(false);
-					uupdateButton.setEnabled(false);
-					udeleteButton.setEnabled(false);
 				}
 			}
 		});
-		uaddButton.setBounds(12, 353, 174, 36);
+		uaddButton.setBounds(12, 347, 174, 36);
 		userEdit.add(uaddButton);
 		//　デフォルトではボタンを無効化しておく
 		uaddButton.setEnabled(false);
 		
 		//　会員削除ボタン
 		udeleteButton = new JButton("\u524A\u9664");		//　「削除」
-		udeleteButton.setBounds(379, 353, 174, 36);
+		udeleteButton.setBounds(379, 347, 174, 36);
 		userEdit.add(udeleteButton);
 		//　ボタンが押されたとき、対応するレコードを削除する　
 		udeleteButton.addMouseListener(new MouseAdapter() {
@@ -490,18 +622,7 @@ public class KanriGamen extends JFrame {
 					messageField.setText("会員番号：" + uidval + "の情報を削除しました");
 					
 					//　各領域をクリア
-					uidField.setText("");
-					uidField.setEditable(true);
-					unameField.setText("");
-					uaddressField.setText("");
-					upostField.setText("");
-					uphoneField.setText("");
-					umailField.setText("");
-					
-					//　各編集ボタンの無効化
-					uaddButton.setEnabled(false);
-					uupdateButton.setEnabled(false);
-					udeleteButton.setEnabled(false);
+					clearUField();
 					
 				}catch(Exception e){
 					messageField.setText("会員の削除：予期せぬエラーが発生しました");
@@ -526,57 +647,145 @@ public class KanriGamen extends JFrame {
 					messageField.setText("会員番号：" + uidval + "の情報を更新しました");
 					
 					//　各領域のクリア
-					uidField.setText("");
-					uidField.setEditable(true);
-					unameField.setText("");
-					uaddressField.setText("");
-					upostField.setText("");
-					uphoneField.setText("");
-					umailField.setText("");
-					
-					//　各編集ボタンの無効化
-					uaddButton.setEnabled(false);
-					uupdateButton.setEnabled(false);
-					udeleteButton.setEnabled(false);
+					clearUField();
 					
 				}catch(Exception e){
 					messageField.setText("会員情報の変更：予期せぬエラーが発生しました");
 				}
 			}
 		});
-		uupdateButton.setBounds(195, 353, 172, 36);
+		uupdateButton.setBounds(195, 347, 172, 36);
 		userEdit.add(uupdateButton);
 		//　デフォルトではボタンを無効化しておく
 		uupdateButton.setEnabled(false);
 		
 		//　編集クリアボタン	編集途中でのキャンセルに使用する
-		clearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
+		uclearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
 		//　「編集をキャンセルします」
-		clearButton.setToolTipText("\u7DE8\u96C6\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3059");
-		clearButton.addMouseListener(new MouseAdapter() {
+		uclearButton.setToolTipText("\u7DE8\u96C6\u3092\u30AD\u30E3\u30F3\u30BB\u30EB\u3057\u307E\u3059");
+		uclearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				//　メッセージ表示
 				messageField.setText("編集をキャンセルしました");
 				
 				//　各領域のクリア
-				uidField.setText("");
-				uidField.setEditable(true);
-				unameField.setText("");
-				uaddressField.setText("");
-				upostField.setText("");
-				uphoneField.setText("");
-				umailField.setText("");
-				
-				//　各編集ボタンの無効化
-				uaddButton.setEnabled(false);
-				uupdateButton.setEnabled(false);
-				udeleteButton.setEnabled(false);
-				
+				clearUField();
 			}
 		});
-		clearButton.setBounds(452, 9, 101, 25);
-		userEdit.add(clearButton);
+		uclearButton.setBounds(452, 9, 101, 25);
+		userEdit.add(uclearButton);
 		
+	}
+	
+	//　図書管理編集チェック	テキストフィールド向け
+	public void bfieldCheck(){
+		// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+		// そうでなければ変更処理とみなす
+		if(bidField.getText().equals("")){
+			//　図書管理番号を編集不可に
+			bidField.setEditable(false);
+			//　追加ボタン有効化
+			baddButton.setEnabled(true);
+		}else{
+			// 変更ボタン有効化
+			bupdateButton.setEnabled(true);
+			// 冊数は不要のため無効化
+			bnumSpinner.setEnabled(false);
+		}
+	}
+	
+	//　会員管理編集チェック	テキストフィールド向け
+	public void ufieldCheck(){
+		// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
+		// そうでなければ変更処理とみなす
+		if(uidField.getText().equals("")){
+			//　会員番号を編集不可に
+			uidField.setEditable(false);
+			//　追加ボタン有効化
+			uaddButton.setEnabled(true);
+		}else{
+			// 変更ボタン有効化
+			uupdateButton.setEnabled(true);
+		}
+	}
+	
+	// 図書管理タブクリア	編集状態をクリアし、各項目を初期状態に戻す
+	public void clearBField(){
+		//　各領域のクリア
+		bidField.setText("");
+		bidField.setEditable(true);
+		bsearchButton.setEnabled(true);
+		btitleField.setText("");
+		bauthorField.setText("");
+		companyField.setText("");
+		isbnField.setText("");
+		isbnSpinner.setEnabled(true);
+		isbnSpinner.setValue(0);
+		bnumSpinner.setEnabled(true);
+		bnumSpinner.setValue(1);
+		bclassComboBox.setEditable(true);
+		bclassComboBox.setSelectedIndex(-1);
+		
+		//　各編集ボタンの無効化
+		baddButton.setEnabled(false);
+		bupdateButton.setEnabled(false);
+		bdeleteButton.setEnabled(false);
+	}
+	
+	// 会員管理タブクリア	編集状態をクリアし、各項目を初期状態に戻す
+	public void clearUField(){
+		//　各領域のクリア
+		uidField.setText("");
+		uidField.setEditable(true);
+		usearchButton.setEnabled(true);
+		unameField.setText("");
+		uaddressField.setText("");
+		upostField.setText("");
+		uphoneField.setText("");
+		umailField.setText("");
+		
+		//　各編集ボタンの無効化
+		uaddButton.setEnabled(false);
+		uupdateButton.setEnabled(false);
+		udeleteButton.setEnabled(false);
+	}
+	
+	// ISBNチェック
+	public boolean isbnCheck(String str, int checkval){
+		long longval = Long.parseLong(str);
+		int[] array = new int[str.length()];
+		int i, sum, intval;
+		
+		// 先頭三桁は決まっているらしい
+		if((longval/1000000000) != 978 && (longval/1000000000) != 979){
+			return true;
+		}
+		
+		//　１桁ずつ配列に格納
+		for(i = 0; i < array.length; i++){
+			array[i] = (int)(longval % 10);
+			longval /= 10;
+		}
+		
+		//　各桁を足す
+		sum = 0;
+		for(i = 11; i > 0; i -= 2){
+			array[i-1] *= 3;
+			sum += array[i] + array[i-1];
+		}
+		
+		//　余りからチェックディジットを求める
+		intval = sum % 10;
+		if(intval != 0){
+			intval = 10 - intval;
+		}
+		
+		//　比較
+		if(intval != checkval){
+			return true;
+		}
+		
+		return false;
 	}
 }
