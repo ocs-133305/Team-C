@@ -337,6 +337,7 @@ public class KanriGamen extends JFrame {
 		baddButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				checkval = (int)isbnSpinner.getValue();
 				// 各項目の長さチェック
 				if(btitleField.getText().length() > 60 || btitleField.getText().length() == 0){
 					messageField.setText("エラー：タイトルを60文字以内で入力してください");
@@ -346,7 +347,7 @@ public class KanriGamen extends JFrame {
 					messageField.setText("エラー：出版社名を20文字以内で入力してください");
 				}else if(isbnField.getText().length() != 12){
 					messageField.setText("エラー：ISBNを12桁で入力してください");
-				}else if(isbnCheck(isbnField.getText(), (int) isbnSpinner.getValue())){
+				}else if(isbnCheck(isbnField.getText(), checkval)){
 					messageField.setText("エラー：ISBNの値が間違っています");
 				}else{	//　本処理
 					try{
@@ -356,12 +357,14 @@ public class KanriGamen extends JFrame {
 						btitle = btitleField.getText();
 						bauthor = bauthorField.getText();
 						company = companyField.getText();
+						// ISBNはスピナーの値と結合
+						isbnval = isbnval * 10 + checkval;
 						
-						//　SQLを使った処理（会員番号の決定、インサート）
+						//　SQLを使った処理（図書管理番号の採番、インサート）
 						
 						
 						//　メッセージ表示
-						messageField.setText("会員番号：" + bidval + "として登録しました");
+						messageField.setText("図書管理番号：" + bidval + "として登録しました");
 						
 						//　各領域のクリア
 						clearBField();
@@ -580,7 +583,7 @@ public class KanriGamen extends JFrame {
 							uaddress = uaddressField.getText();
 							umail = umailField.getText();
 							
-							//　SQLを使った処理（会員番号の決定、インサート）
+							//　SQLを使った処理（会員番号の採番、インサート）
 							
 							
 							//　メッセージ表示
