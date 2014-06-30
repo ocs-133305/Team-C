@@ -1,15 +1,46 @@
 /* 大雑把なソースの構造
+ * ※これから やるべきorやりたいこと を項目ごとに「：〇〇」でメモしてます。
+ * ※最低限の処理は完成
+ * 
  * ・本コメント
- * ・各種インポート
+ * ・各種インポート（自動編成）
  * ・KanriGamenクラス
  * 	・各種フィールド
  * 	・メインメソッド（単体テスト用）
  * 	・コンストラクタ
  * 		・メイン領域
- * 		・図書管理タブ
- * 		・会員管理タブ
+ * 		・図書管理タブ	：空きスペースに取説的なテキストを表示してみたい
+ * 			・図書管理番号I/O
+ * 			・図書検索ボタン	：SQL
+ * 			・タイトルI/O
+ * 			・著者I/O
+ * 			・冊数スピナー
+ * 			・分類コンボボックス	：SQL（部品生成に必要）
+ * 			・出版社I/O
+ * 			・ISBN系
+ * 			・図書追加ボタン	：SQL		：確認
+ * 			・図書変更ボタン	：SQL		：確認
+ * 			・図書削除ボタン	：SQL		：確認
+ * 			・編集クリアボタン
+ * 		・会員管理タブ	：空きスペースに取説的なテキストを表示してみたい
+ * 			・会員番号I/O
+ * 			・会員検索ボタン	：SQL
+ * 			・氏名I/O
+ * 			・住所I/O
+ * 			・郵便番号I/O
+ * 			・電話番号I/O
+ * 			・メールアドレスI/O
+ * 			・会員追加ボタン	：SQL		：確認
+ * 			・会員削除ボタン	：SQL		：確認
+ * 			・会員変更ボタン	：SQL		：確認
+ * 			・編集クリアボタン
+ * 	・図書管理：編集チェックメソッド
+ * 	・図書管理：各項目の長さチェック
+ * 	・会員管理：編集チェックメソッド
+ * 	・会員管理：各項目の長さチェック
  * 	・図書タブクリアメソッド
  * 	・会員タブクリアメソッド
+ * 	・ISBNチェックメソッド	：もうちょっと綺麗にならんかな
  */
 
 
@@ -90,10 +121,14 @@ public class KanriGamen extends JFrame {
 //	private String[] insertstr = new String[6];	// レコード挿入用配列
 	private String[] sqlret = new String[6];	//　問い合わせ結果（一行）格納
 	private int i;
-	private int bidval, checkval;				// 図書管理番号、チェックディジット
+	
+	//　図書管理用変数
+	private int bidval, checkval, bnum;			// 図書管理番号、チェックディジット
 	private long isbnval;						//　ISBN
 	private String btitle, bauthor, bclass;		// 図書名、著者、分類（ジャンル）
 	private String company;						// 出版社
+	
+	//　会員管理用変数
 	private int uidval, upostval;				// 会員番号、郵便番号
 	private long uphoneval;						//　電話番号
 	private String uname, uaddress, umail;		// 氏名、住所、メールアドレス
@@ -338,39 +373,35 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				checkval = (int)isbnSpinner.getValue();
-				// 各項目の長さチェック
-				if(btitleField.getText().length() > 60 || btitleField.getText().length() == 0){
-					messageField.setText("エラー：タイトルを60文字以内で入力してください");
-				}else if(bauthorField.getText().length() > 30 || bauthorField.getText().length() == 0){
-					messageField.setText("エラー：著者名を30文字以内で入力してください");
-				}else if(companyField.getText().length() > 20 || companyField.getText().length() == 0){
-					messageField.setText("エラー：出版社名を20文字以内で入力してください");
-				}else if(isbnField.getText().length() != 12){
-					messageField.setText("エラー：ISBNを12桁で入力してください");
-				}else if(isbnCheck(isbnField.getText(), checkval)){
-					messageField.setText("エラー：ISBNの値が間違っています");
-				}else{	//　本処理
+				// 各項目の長さチェック(別メソッド)	戻り値trueなら本処理
+				if(blengthCheck()){
 					try{
 						isbnval = Long.parseLong(isbnField.getText());
 						
 						//　各項目をいったん変数に格納
-						btitle = btitleField.getText();
-						bauthor = bauthorField.getText();
-						company = companyField.getText();
-						// ISBNはスピナーの値と結合
-						isbnval = isbnval * 10 + checkval;
+						btitle = btitleField.getText();		//　タイトル
+						bauthor = bauthorField.getText();	//　著者
+						company = companyField.getText();	//　出版社
+						bnum = (int)bnumSpinner.getValue();	//　冊数　=　同じ本を何冊追加するのか
+						isbnval = isbnval * 10 + checkval;	// ISBNはスピナーの値と結合
 						
 						//　SQLを使った処理（図書管理番号の採番、インサート）
 						
 						
 						//　メッセージ表示
-						messageField.setText("図書管理番号：" + bidval + "として登録しました");
+						if(bnum == 1){
+							messageField.setText("図書管理番号：" + bidval + "として登録しました");
+						}else{
+							messageField.setText(bnum + "冊を登録しました");
+						}
 						
 						//　各領域のクリア
 						clearBField();
 					}catch(NumberFormatException ise){
 						messageField.setText("エラー：ISBNに数字以外が入力されています");
-					}	
+					}catch(Exception e){
+						messageField.setText("図書の追加：予期せぬエラーが発生しました");
+					}
 				}
 			}
 		});
@@ -380,12 +411,67 @@ public class KanriGamen extends JFrame {
 		
 		// 図書変更ボタン
 		bupdateButton = new JButton("\u5909\u66F4");	//　「変更」
+		bupdateButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				checkval = (int)isbnSpinner.getValue();
+				// 各項目の長さチェック(別メソッド)	戻り値trueなら本処理
+				if(blengthCheck()){
+					try{
+						isbnval = Long.parseLong(isbnField.getText());
+						
+						//　各項目をいったん変数に格納
+						btitle = btitleField.getText();		//　タイトル
+						bauthor = bauthorField.getText();	//　著者
+						company = companyField.getText();	//　出版社
+						isbnval = isbnval * 10 + checkval;	// ISBNはスピナーの値と結合
+						
+						//　SQL文構築（仮）
+						sqlstr = "hoge";
+						
+						// SQL実行（仮）
+						
+						
+						//　メッセージ表示
+						messageField.setText("図書管理番号：" + bidval + "の情報を変更しました");
+						
+						//　各領域のクリア
+						clearBField();
+					}catch(NumberFormatException ise){
+						messageField.setText("エラー：ISBNに数字以外が入力されています");
+					}catch(Exception e){
+						messageField.setText("図書情報の変更：予期せぬエラーが発生しました");
+					}
+				}
+			}
+		});
 		bupdateButton.setEnabled(false);	//　デフォルト無効
 		bupdateButton.setBounds(195, 347, 172, 36);
 		bookEdit.add(bupdateButton);
 		
 		//　図書削除ボタン
 		bdeleteButton = new JButton("\u524A\u9664");	//　「削除」
+		bdeleteButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try{
+					//bidvalは検索段階で検査・代入済み
+					//　SQL文構築（仮）
+					sqlstr = "hoge";
+					//　SQL実行（仮）
+					
+					
+					//　メッセージ表示
+					messageField.setText("図書管理番号：" + bidval + "の情報を削除しました");
+					
+					//　各領域をクリア
+					clearBField();
+					
+				}catch(Exception bde){
+					messageField.setText("図書の削除：予期せぬエラーが発生しました");
+				}
+			}
+		});
 		bdeleteButton.setEnabled(false);	//　デフォルト無効
 		bdeleteButton.setBounds(379, 347, 174, 36);
 		bookEdit.add(bdeleteButton);
@@ -433,13 +519,14 @@ public class KanriGamen extends JFrame {
 				if(buf.length() == 8){		// 文字数チェック
 					try{
 						
-						uidval = Integer.parseInt(buf);	//　uidvalにintで格納（不要？）
+						uidval = Integer.parseInt(buf);	//　uidvalにintで格納（エラーチェック用）
 						//　SQL文構築（仮）
 						sqlstr = "hoge" + uidval;
 						//　SQL実行（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
 						for(i = 0; i < sqlret.length; i++){
 							sqlret[i] = "kekka" + i;
 						}
+						
 						//　各領域に表示
 						unameField.setText(sqlret[1]);
 						uaddressField.setText(sqlret[2]);
@@ -453,7 +540,7 @@ public class KanriGamen extends JFrame {
 						// 会員番号を編集不可に
 						uidField.setEditable(false);
 						// 検索ボタンを無効化
-						usearchButton.setEnabled(true);
+						usearchButton.setEnabled(false);
 						
 					}catch(NumberFormatException e){	//　数値変換に失敗
 						messageField.setText("会員番号：数値以外が入力されています");
@@ -561,18 +648,8 @@ public class KanriGamen extends JFrame {
 		uaddButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 各項目の長さチェック
-				if(unameField.getText().length() > 20 || unameField.getText().length() == 0){
-					messageField.setText("エラー：氏名を20文字以内で入力してください");
-				}else if(uaddressField.getText().length() > 30 || uaddressField.getText().length() == 0){
-					messageField.setText("エラー：住所を30文字以内で入力してください");
-				}else if(upostField.getText().length() != 7){
-					messageField.setText("エラー：郵便番号を7桁で入力してください");
-				}else if(uphoneField.getText().length() != 10 && uphoneField.getText().length() != 11){
-					messageField.setText("エラー：電話番号を正しく入力してください");
-				}else if(umailField.getText().length() > 50){
-					messageField.setText("エラー：メールアドレスは50文字以内で入力してください");
-				}else{	//　本処理
+				// 各項目の長さチェック（別メソッド）	戻り値trueなら本処理実行
+				if(ulengthCheck()){
 					try{
 						upostval = Integer.parseInt(upostField.getText());
 						try{
@@ -599,6 +676,7 @@ public class KanriGamen extends JFrame {
 						messageField.setText("エラー：郵便番号に数字以外が入力されています");
 					}
 				}
+				
 			}
 		});
 		uaddButton.setBounds(12, 347, 174, 36);
@@ -615,7 +693,7 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try{
-					
+					//uidvalは検索段階で検査・代入済み
 					//　SQL文構築（仮）
 					sqlstr = "hoge" + uidval;
 					//　SQL実行（仮）
@@ -640,20 +718,38 @@ public class KanriGamen extends JFrame {
 		uupdateButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				try{
-					//　SQL文構築（仮）
-					sqlstr = "hoge";
-					//　SQL実行（仮）
-					
-					
-					//　メッセージの表示
-					messageField.setText("会員番号：" + uidval + "の情報を更新しました");
-					
-					//　各領域のクリア
-					clearUField();
-					
-				}catch(Exception e){
-					messageField.setText("会員情報の変更：予期せぬエラーが発生しました");
+				// 各項目の長さチェック（別メソッド）	戻り値trueなら本処理実行
+				if(ulengthCheck()){
+					try{
+						upostval = Integer.parseInt(upostField.getText());
+						try{
+							uphoneval = Long.parseLong(uphoneField.getText());
+							
+							//　各項目をいったん変数に格納（uidvalは検索時に検査・代入済）
+							uname = unameField.getText();
+							uaddress = uaddressField.getText();
+							umail = umailField.getText();
+							
+							//　SQL文構築（仮）
+							sqlstr = "hoge";
+							
+							// SQL実行（仮）
+							
+							
+							//　メッセージ表示
+							messageField.setText("会員番号：" + uidval + "の情報を変更しました");
+							
+							//　各領域のクリア
+							clearUField();
+							
+						}catch(NumberFormatException pne){
+							messageField.setText("エラー：電話番号に数字以外が入力されています");
+						}
+					}catch(NumberFormatException pse){
+						messageField.setText("エラー：郵便番号に数字以外が入力されています");	
+					}catch(Exception e){
+						messageField.setText("会員情報の変更：予期せぬエラーが発生しました");
+					}
 				}
 			}
 		});
@@ -681,7 +777,7 @@ public class KanriGamen extends JFrame {
 		
 	}
 	
-	//　図書管理編集チェック	テキストフィールド向け
+	//　図書管理:編集チェック	テキストフィールド向け
 	public void bfieldCheck(){
 		// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
 		// そうでなければ変更処理とみなす
@@ -698,7 +794,28 @@ public class KanriGamen extends JFrame {
 		}
 	}
 	
-	//　会員管理編集チェック	テキストフィールド向け
+	// 図書管理：各項目の長さチェック
+	public boolean blengthCheck(){
+		boolean flg = false;
+		
+		if(btitleField.getText().length() > 60 || btitleField.getText().length() == 0){
+			messageField.setText("エラー：タイトルを60文字以内で入力してください");
+		}else if(bauthorField.getText().length() > 30 || bauthorField.getText().length() == 0){
+			messageField.setText("エラー：著者名を30文字以内で入力してください");
+		}else if(companyField.getText().length() > 20 || companyField.getText().length() == 0){
+			messageField.setText("エラー：出版社名を20文字以内で入力してください");
+		}else if(isbnField.getText().length() != 12){
+			messageField.setText("エラー：ISBNを12桁で入力してください");
+		}else if(isbnCheck(isbnField.getText(), checkval)){
+			messageField.setText("エラー：ISBNの値が間違っています");
+		}else{
+			flg = true;
+		}
+		
+		return flg;
+	}
+	
+	//　会員管理:編集チェック
 	public void ufieldCheck(){
 		// 何かタイプされたとき、会員番号が未入力であれば追加操作とみなす
 		// そうでなければ変更処理とみなす
@@ -707,10 +824,33 @@ public class KanriGamen extends JFrame {
 			uidField.setEditable(false);
 			//　追加ボタン有効化
 			uaddButton.setEnabled(true);
+			//　検索ボタン無効化
+			usearchButton.setEnabled(false);
 		}else{
 			// 変更ボタン有効化
 			uupdateButton.setEnabled(true);
 		}
+	}
+	
+	//　会員管理:各項目の長さチェック
+	public boolean ulengthCheck(){
+		boolean flg = false;
+		
+		if(unameField.getText().length() > 20 || unameField.getText().length() == 0){
+			messageField.setText("エラー：氏名を20文字以内で入力してください");
+		}else if(uaddressField.getText().length() > 30 || uaddressField.getText().length() == 0){
+			messageField.setText("エラー：住所を30文字以内で入力してください");
+		}else if(upostField.getText().length() != 7){
+			messageField.setText("エラー：郵便番号を7桁で入力してください");
+		}else if(uphoneField.getText().length() != 10 && uphoneField.getText().length() != 11){
+			messageField.setText("エラー：電話番号を正しく入力してください");
+		}else if(umailField.getText().length() > 50){
+			messageField.setText("エラー：メールアドレスは50文字以内で入力してください");
+		}else{
+			flg = true;
+		}
+		
+		return flg;
 	}
 	
 	// 図書管理タブクリア	編集状態をクリアし、各項目を初期状態に戻す
@@ -754,7 +894,7 @@ public class KanriGamen extends JFrame {
 		udeleteButton.setEnabled(false);
 	}
 	
-	// ISBNチェック
+	// ISBNチェック	（暫定版）
 	public boolean isbnCheck(String str, int checkval){
 		long longval = Long.parseLong(str);
 		int[] array = new int[str.length()];
