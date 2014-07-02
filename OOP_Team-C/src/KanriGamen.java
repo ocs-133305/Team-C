@@ -1,6 +1,9 @@
-/* 大雑把なソースの構造
+/* 管理画面クラス
+ * GUI制作：武田
+ * 
+ * 以下、大雑把なソースの構造
  * ※これから やるべきorやりたいこと を項目ごとに「：〇〇」でメモしてます。
- * ※最低限の処理は完成
+ * ※最低限の見かけ上の動作は完成
  * 
  * ・本コメント
  * ・各種インポート（自動編成）
@@ -216,7 +219,7 @@ public class KanriGamen extends JFrame {
 						
 						//　SQL文構築（仮）
 						sqlstr = "hoge" + bidval;
-						//　SQL実行（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
+						//　SQL実行（仮）	sqlretはテスト用	使っても使わなくてもいい
 						for(i = 0; i < sqlret.length; i++){
 							sqlret[i] = "kekka" + i;
 						}
@@ -522,7 +525,7 @@ public class KanriGamen extends JFrame {
 						uidval = Integer.parseInt(buf);	//　uidvalにintで格納（エラーチェック用）
 						//　SQL文構築（仮）
 						sqlstr = "hoge" + uidval;
-						//　SQL実行（仮）	sqlretに結果を格納したい　結果を各フィールドにsetText(sqlret[i])で表示したいから
+						//　SQL実行（仮）	sqlretはテスト用	使っても使わなくてもいい
 						for(i = 0; i < sqlret.length; i++){
 							sqlret[i] = "kekka" + i;
 						}
