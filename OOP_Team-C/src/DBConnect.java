@@ -18,7 +18,7 @@ public class DBConnect {
 	boolean flg;
 	
 	// データベースに接続する
-	public boolean connectDB(){
+	public boolean connect(){
 		
 		try{
 			// ドライバロード

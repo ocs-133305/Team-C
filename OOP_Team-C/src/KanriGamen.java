@@ -53,6 +53,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -66,6 +68,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 
 public class KanriGamen extends JFrame {
@@ -118,6 +123,9 @@ public class KanriGamen extends JFrame {
 	private JButton uupdateButton;
 	private JButton udeleteButton;
 	
+	// DB接続クラス
+	DBConnect db;
+	
 	//　作業用変数
 	private String buf;
 	private	String sqlstr;						// SQL文格納
@@ -157,6 +165,11 @@ public class KanriGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public KanriGamen() {
+		
+		// インスタンス生成
+		db = new DBConnect();
+
+		//　サイズ変更不可
 		setResizable(false);
 		
 	//　メイン領域
@@ -214,44 +227,50 @@ public class KanriGamen extends JFrame {
 				buf = bidField.getText();
 				if(buf.length() == 8){		// 文字数チェック
 					try{
-						
-						bidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
-						
-						//　SQL文構築（仮）
-						sqlstr = "hoge" + bidval;
-						//　SQL実行（仮）	sqlretはテスト用	使っても使わなくてもいい
-						for(i = 0; i < sqlret.length; i++){
-							sqlret[i] = "kekka" + i;
+						// DB接続	成功したら処理開始
+						if(db.connect()){
+							bidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
+							
+							//　SQL文構築（仮）
+							sqlstr = "SELECT * FROM book WHERE book_id = " + bidval;
+							//　SQL実行（仮）
+							ResultSet rs = db.select(sqlstr);
+							
+							// 戻り値に中身があれば結果を表示（一件のみ）
+							if(rs.next()){
+								sqlret[3] = "4";			// テスト用、分類番号
+								
+								//　ISBNを表示用にいじる（仮）		テキストフィールドとチェック用スピナーに分ける必要がある
+								isbnval = rs.getLong("ISBN");
+								checkval = (int)(isbnval % 10);
+								isbnval /= 10;
+								buf = Long.toString(isbnval);
+								
+								//　各領域に表示
+								btitleField.setText(rs.getString("book_name"));
+								bauthorField.setText(rs.getString("author"));
+								companyField.setText(rs.getString("company"));
+								isbnField.setText(buf);
+								isbnSpinner.setValue(checkval);
+								// コンボボックスで表示する文字の添え字を指定
+								bclassComboBox.setSelectedIndex(Integer.parseInt(sqlret[3]));
+								
+								// メッセージの表示
+								messageField.setText("図書管理番号：" + bidField.getText() + "の情報を表示します");
+								//　削除ボタンを有効化
+								bdeleteButton.setEnabled(true);
+								// 会員番号を編集不可に
+								bidField.setEditable(false);
+								// 冊数スピナーを無効化
+								bnumSpinner.setEnabled(false);
+								// 検索ボタンを無効化
+								bsearchButton.setEnabled(false);
+							}else{
+								messageField.setText("該当する図書は存在しません");
+							}
+						}else{
+							messageField.setText("データベースへの接続に失敗しました");
 						}
-						sqlret[3] = "4";			// テスト用、分類番号
-						sqlret[5] = "1234567898";	// 同、ISBN
-						
-						//　ISBNを表示用にいじる（仮）		テキストフィールドとチェック用スピナーに分ける必要がある
-						isbnval = Long.parseLong(sqlret[5]);
-						checkval = (int)(isbnval % 10);
-						isbnval /= 10;
-						buf = Long.toString(isbnval);
-						
-						//　各領域に表示
-						btitleField.setText(sqlret[1]);
-						bauthorField.setText(sqlret[2]);
-						// コンボボックスで表示する文字の添え字を指定
-						bclassComboBox.setSelectedIndex(Integer.parseInt(sqlret[3]));
-						companyField.setText(sqlret[4]);
-						isbnField.setText(buf);
-						isbnSpinner.setValue(checkval);
-						
-						
-						// メッセージの表示
-						messageField.setText("図書管理番号：" + bidval + "の情報を表示します");
-						//　削除ボタンを有効化
-						bdeleteButton.setEnabled(true);
-						// 会員番号を編集不可に
-						bidField.setEditable(false);
-						// 冊数スピナーを無効化
-						bnumSpinner.setEnabled(false);
-						// 検索ボタンを無効化
-						bsearchButton.setEnabled(false);
 						
 					}catch(NumberFormatException e){	//　数値変換に失敗
 						messageField.setText("図書管理番号：数値以外が入力されています");
@@ -320,7 +339,7 @@ public class KanriGamen extends JFrame {
 		
 		//　分類コンボボックス		要・SQLによる項目取得
 		bclassComboBox = new JComboBox();
-		// テスト用モデル	ここはSQLでclassテーブルの項目を持ってきてほしい
+		// テスト用モデル	ここはSQLでclassテーブルの項目を持ってきたい
 		bclassComboBox.setModel(new DefaultComboBoxModel(new String[] {"1111", "2222", "3333", "4444", "5555", "6666", "7777"}));
 		bclassComboBox.setBounds(114, 158, 110, 22);
 		bookEdit.add(bclassComboBox);
