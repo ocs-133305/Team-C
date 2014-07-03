@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.Box;
 import javax.swing.border.EtchedBorder;
 import java.awt.Component;
+import javax.swing.JLayeredPane;
 
 
 public class GuiTest_takeda extends JFrame {
@@ -62,9 +63,37 @@ public class GuiTest_takeda extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JButton btnNewButton = new JButton("\u958B\u304F");
+		btnNewButton.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							NewWindow frame = new NewWindow();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		btnNewButton.setBounds(12, 400, 135, 57);
+		contentPane.add(btnNewButton);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("New check box");
+		chckbxNewCheckBox.setBounds(238, 405, 117, 25);
+		contentPane.add(chckbxNewCheckBox);
+		
+		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setBounds(0, 0, 513, 374);
+		contentPane.add(layeredPane);
+		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(12, 13, 501, 374);
-		contentPane.add(tabbedPane);
+		tabbedPane.setBounds(0, 0, 501, 374);
+		layeredPane.add(tabbedPane);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("âÔàıä«óù", null, panel, null);
@@ -146,6 +175,16 @@ public class GuiTest_takeda extends JFrame {
 		horizontalStrut.setBounds(12, 140, 472, 42);
 		panel.add(horizontalStrut);
 		
+		JButton button_1 = new JButton("\u5207\u308A\u66FF\u3048");
+		button_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				la
+			}
+		});
+		button_1.setBounds(12, 306, 101, 25);
+		panel.add(button_1);
+		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("ê}èëä«óù", null, panel_1, null);
 		panel_1.setLayout(null);
@@ -188,28 +227,8 @@ public class GuiTest_takeda extends JFrame {
 		table.setBounds(193, 28, 291, 284);
 		panel_1.add(table);
 		
-		JButton btnNewButton = new JButton("\u958B\u304F");
-		btnNewButton.setFont(new Font("MS UI Gothic", Font.PLAIN, 18));
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							NewWindow frame = new NewWindow();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			}
-		});
-		btnNewButton.setBounds(12, 400, 135, 57);
-		contentPane.add(btnNewButton);
-		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("New check box");
-		chckbxNewCheckBox.setBounds(238, 405, 117, 25);
-		contentPane.add(chckbxNewCheckBox);
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(0, 0, 513, 374);
+		layeredPane.add(panel_2);
 	}
 }
