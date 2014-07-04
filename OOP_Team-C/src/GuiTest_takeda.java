@@ -179,7 +179,7 @@ public class GuiTest_takeda extends JFrame {
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				la
+				
 			}
 		});
 		button_1.setBounds(12, 306, 101, 25);
