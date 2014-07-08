@@ -8,20 +8,24 @@ import java.awt.EventQueue;
 
 public class MainApp {
 
+	public static MenuGamen menuFrame;
+	public static KashidashiGamen kashiFrame;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					// äeâÊñ ê∂ê¨
-					MenuGamen menuFrame = new MenuGamen();
-					KashidashiGamen kashiFrame = new KashidashiGamen();
+					menuFrame = new MenuGamen();
+					kashiFrame = new KashidashiGamen();
 					HenkyakuGamen henkyakuFrame = new HenkyakuGamen();
 					HenkyakuRenrakuGamenTest renrakuFrame = new HenkyakuRenrakuGamenTest();
 					KanriGamen kanriFrame = new KanriGamen();
 					Kensaku kensakuFrame = new Kensaku();
 					
 					//Å@åüçıâÊñ ÇÇ‹Ç∏ï\é¶
-					kensakuFrame.setVisible(true);
+//					kensakuFrame.setVisible(true);
+					menuFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

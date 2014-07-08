@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MenuGamen extends JFrame {
 
@@ -76,6 +78,17 @@ public class MenuGamen extends JFrame {
 
 		// ë›èoâÊñ É{É^Éì
 		JButton kashiButton = new JButton("\u8CB8\u51FA");
+		kashiButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try{
+					MainApp.menuFrame.setVisible(false);
+					MainApp.kashiFrame.setVisible(true);
+				}catch(NullPointerException ne){
+					
+				}
+			}
+		});
 		kashiButton.setBounds(39, 91, 148, 33);
 		contentPane.add(kashiButton);
 

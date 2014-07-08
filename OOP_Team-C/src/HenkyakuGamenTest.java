@@ -41,7 +41,6 @@ public class HenkyakuGamenTest extends JFrame {
 
 	// 編集ボタン
 	private JButton retButton;
-	private boolean retBflg;
 	private JButton ucrearButton;
 
 	// 変数など
@@ -50,6 +49,11 @@ public class HenkyakuGamenTest extends JFrame {
 	private String sqlstr;
 	private int uidval;
 	private int bidval;
+	
+	//　コンポーネント有効化フラグ
+	private boolean usearchflg;
+	private boolean ucrearflg;
+	private boolean retflg;
 
 	private int[] Henkyaku = null;
 
@@ -151,7 +155,8 @@ public class HenkyakuGamenTest extends JFrame {
 		getContentPane().add(scrollPane);
 		list.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
-				retButton.setEnabled(true);
+				retflg = true;
+				retButton.setEnabled(retflg);
 			}
 		});
 		scrollPane.setViewportView(list);
@@ -163,82 +168,87 @@ public class HenkyakuGamenTest extends JFrame {
 
 		// 会員入力ボタン
 		usearchButton = new JButton("\u5165\u529B");
+		usearchflg = true;
 		usearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				buf = uidField.getText();
-				if (buf.length() == 8) { // 文字数チェック
-					try {
-						// DB接続 成功したら処理開始
-						if (db.connect()) {
-							uidval = Integer.parseInt(buf); // bidvalにintで格納（エラーチェックのため）
-
-							// SQL文構築（仮）
-							sqlstr = "SELECT * FROM user WHERE user_id = "
-									+ uidval;
-							// SQL実行（仮）
-							ResultSet rs = db.select(sqlstr);
-
-							// 戻り値に中身があれば結果を表示（一件のみ）
-
-							if (rs.next()) {
-
-								// 各領域に表示
-								unameField.setText(rs.getString("user_name"));
-								uaddressField.setText(rs.getString("address"));
-								uphoneField.setText(rs.getString("phone"));
-
-								// メッセージの表示
-								messageField.setText("会員番号："
-										+ uidField.getText() + "の情報を表示します");
-								// 会員番号を編集不可に
-								uidField.setEditable(false);
-								// 検索ボタン無効化
-								usearchButton.setEnabled(false);
-								// キャンセルボタン有効化
-								ucrearButton.setEnabled(true);
-
-								// model.clear();
-								ResultSet rs2 = db
-										.select("SELECT COUNT(*)  FROM lend WHERE flg =0 and user_id ="
-												+ uidval);
-								if (rs2.next()) {
-									int idx = rs2.getInt(1);
-									Henkyaku = new int[idx];
+				if(usearchflg){
+					buf = uidField.getText();
+					if (buf.length() == 8) { // 文字数チェック
+						try {
+							// DB接続 成功したら処理開始
+							if (db.connect()) {
+								uidval = Integer.parseInt(buf); // bidvalにintで格納（エラーチェックのため）
+	
+								// SQL文構築（仮）
+								sqlstr = "SELECT * FROM user WHERE user_id = "
+										+ uidval;
+								// SQL実行（仮）
+								ResultSet rs = db.select(sqlstr);
+	
+								// 戻り値に中身があれば結果を表示（一件のみ）
+	
+								if (rs.next()) {
+	
+									// 各領域に表示
+									unameField.setText(rs.getString("user_name"));
+									uaddressField.setText(rs.getString("address"));
+									uphoneField.setText(rs.getString("phone"));
+	
+									// メッセージの表示
+									messageField.setText("会員番号："
+											+ uidField.getText() + "の情報を表示します");
+									// 会員番号を編集不可に
+									uidField.setEditable(false);
+									// 検索ボタン無効化
+									usearchflg = false;
+									usearchButton.setEnabled(usearchflg);
+									// キャンセルボタン有効化
+									ucrearflg = true;
+									ucrearButton.setEnabled(ucrearflg);
+	
+									// model.clear();
+									ResultSet rs2 = db
+											.select("SELECT COUNT(*)  FROM lend WHERE flg =0 and user_id ="
+													+ uidval);
+									if (rs2.next()) {
+										int idx = rs2.getInt(1);
+										Henkyaku = new int[idx];
+									}
+	
+									ResultSet rs3 = db
+											.select("SELECT book_id,book_name FROM lend NATURAL JOIN book WHERE flg=0 and user_id ="
+													+ uidval);
+	
+									int j = 0;
+									while (rs3.next()) {
+										Henkyaku[j] = rs3.getInt("book_id");
+										j++;
+										String book_name = rs3
+												.getString("book_name");
+										model.addElement(book_name + "\n");
+									}
+									// 切断
+									rs.close();
+									rs2.close();
+									rs3.close();
+									db.close();
+	
+								} else {
+									messageField.setText("該当する会員は存在しません");
 								}
-
-								ResultSet rs3 = db
-										.select("SELECT book_id,book_name FROM lend NATURAL JOIN book WHERE flg=0 and user_id ="
-												+ uidval);
-
-								int j = 0;
-								while (rs3.next()) {
-									Henkyaku[j] = rs3.getInt("book_id");
-									j++;
-									String book_name = rs3
-											.getString("book_name");
-									model.addElement(book_name + "\n");
-								}
-								// 切断
-								rs.close();
-								rs2.close();
-								rs3.close();
-								db.close();
-
 							} else {
-								messageField.setText("該当する会員は存在しません");
+								messageField.setText("データベースへの接続に失敗しました");
 							}
-						} else {
-							messageField.setText("データベースへの接続に失敗しました");
+	
+						} catch (NumberFormatException e) { // 数値変換に失敗
+							messageField.setText("会員番号：数値以外が入力されています");
+						} catch (Exception e) { // 予期せぬエラー
+							messageField.setText("会員番号：予期せぬエラーが発生しました");
 						}
-
-					} catch (NumberFormatException e) { // 数値変換に失敗
-						messageField.setText("会員番号：数値以外が入力されています");
-					} catch (Exception e) { // 予期せぬエラー
-						messageField.setText("会員番号：予期せぬエラーが発生しました");
+					} else {
+						messageField.setText("図書管理番号：8桁の数値を入力してください");
 					}
-				} else {
-					messageField.setText("図書管理番号：8桁の数値を入力してください");
 				}
 			}
 		});
@@ -247,13 +257,16 @@ public class HenkyakuGamenTest extends JFrame {
 
 		// 編集キャンセルボタン
 		ucrearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
-		ucrearButton.setEnabled(false);
+		ucrearflg = false;
+		ucrearButton.setEnabled(ucrearflg);
 		ucrearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				crearUField();
-				model.clear();
-				messageField.setText("会員情報をクリアします");
+				if(ucrearflg){
+					crearUField();
+					model.clear();
+					messageField.setText("会員情報をクリアします");
+				}
 			}
 		});
 		ucrearButton.setBounds(458, 100, 101, 25);
@@ -302,56 +315,61 @@ public class HenkyakuGamenTest extends JFrame {
 
 		// 返却ボタン
 		retButton = new JButton("\u8FD4\u5374");
-		retButton.setEnabled(false);	// デフォルトでは無効化
+		retflg = false;
+		retButton.setEnabled(retflg);	// デフォルトでは無効化
 		retButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int[] index = list.getSelectedIndices();
-				int KENSU = 0;
-				if (index.length == 0) {
-					messageField.setText("データを選択してください"); // 選択されていない状態でボタンが押されたときの処理
-				} else {
-					for (int i = 0; i < index.length; i++) {
-						int book_id = Henkyaku[index[i]];
-						if (db.connect()) {
-							KENSU = db
-									.update("UPDATE lend SET flg = 1 WHERE flg = 0 and book_id ="
-											+ book_id)
-									+ KENSU;
+				if(retflg){
+					int[] index = list.getSelectedIndices();
+					int KENSU = 0;
+					if (index.length == 0) {
+						messageField.setText("データを選択してください"); // 選択されていない状態でボタンが押されたときの処理
+					} else {
+						for (int i = 0; i < index.length; i++) {
+							int book_id = Henkyaku[index[i]];
+							if (db.connect()) {
+								KENSU = db
+										.update("UPDATE lend SET flg = 1 WHERE flg = 0 and book_id ="
+												+ book_id)
+										+ KENSU;
+							}
 						}
 					}
-				}
-				try {
-					model.clear();
-					ResultSet rs2 = db
-							.select("SELECT COUNT(*)  FROM lend WHERE flg =0 and user_id ="
-									+ uidval);
-					if (rs2.next()) {
-						int idx = rs2.getInt(1);
-						Henkyaku = new int[idx];
+					try {
+						model.clear();
+						ResultSet rs2 = db
+								.select("SELECT COUNT(*)  FROM lend WHERE flg =0 and user_id ="
+										+ uidval);
+						if (rs2.next()) {
+							int idx = rs2.getInt(1);
+							Henkyaku = new int[idx];
+						}
+	
+						ResultSet rs3 = db
+								.select("SELECT book_id,book_name FROM lend NATURAL JOIN book WHERE flg=0 and user_id ="
+										+ uidval);
+	
+						int j = 0;
+						while (rs3.next()) {
+							Henkyaku[j] = rs3.getInt("book_id");
+							j++;
+							String book_name = rs3.getString("book_name");
+							model.addElement(book_name + "\n");
+						}
+						// 切断
+						rs2.close();
+						rs3.close();
+						db.close();
+						messageField.setText(KENSU + "件のデータ更新に成功しました");
+						// 返却ボタン無効化
+						retflg = false;
+						retButton.setEnabled(retflg);
+	
+						HenkyakuRenrakuGamenTest.List();
+					} catch (SQLException e1) {
+						messageField.setText("データベース接続エラー3");
 					}
-
-					ResultSet rs3 = db
-							.select("SELECT book_id,book_name FROM lend NATURAL JOIN book WHERE flg=0 and user_id ="
-									+ uidval);
-
-					int j = 0;
-					while (rs3.next()) {
-						Henkyaku[j] = rs3.getInt("book_id");
-						j++;
-						String book_name = rs3.getString("book_name");
-						model.addElement(book_name + "\n");
-					}
-					// 切断
-					rs2.close();
-					rs3.close();
-					db.close();
-					messageField.setText(KENSU + "件のデータ更新に成功しました");
-					// 返却ボタン無効化
-					retButton.setEnabled(false);
-					HenkyakuRenrakuGamenTest.List();
-				} catch (SQLException e1) {
-					messageField.setText("データベース接続エラー3");
 				}
 			}
 		});
@@ -367,8 +385,11 @@ public class HenkyakuGamenTest extends JFrame {
 		unameField.setText("");
 		uaddressField.setText("");
 		uphoneField.setText("");
-		usearchButton.setEnabled(true);
-		ucrearButton.setEnabled(false);
-		retButton.setEnabled(false);
+		usearchflg = true;
+		usearchButton.setEnabled(usearchflg);
+		ucrearflg = false;
+		ucrearButton.setEnabled(ucrearflg);
+		retflg = false;
+		retButton.setEnabled(retflg);
 	}
 }
