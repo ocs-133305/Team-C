@@ -117,7 +117,8 @@ public class HenkyakuGamen extends JFrame {
 
 		setTitle("\u8FD4\u5374\u753B\u9762");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 500);
+		setSize(600, 500);
+		setLocationRelativeTo(null);	// ウィンドウを中央に表示
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -125,6 +126,17 @@ public class HenkyakuGamen extends JFrame {
 
 		// 終了ボタン
 		exitButton = new JButton("\u7D42\u4E86");
+		exitButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try{
+					MainApp.henkyakuFrame.setVisible(false);
+					MainApp.menuFrame.setVisible(true);
+				}catch(NullPointerException ne){
+					
+				}
+			}
+		});
 		exitButton.setBounds(469, 13, 101, 25);
 		contentPane.add(exitButton);
 
@@ -391,5 +403,14 @@ public class HenkyakuGamen extends JFrame {
 		ucrearButton.setEnabled(ucrearflg);
 		retflg = false;
 		retButton.setEnabled(retflg);
+	}
+	
+	// 画面オープンメソッド
+	public void openHenkyaku(){
+		try{
+			this.setVisible(true);
+		}catch(NullPointerException ne){
+			
+		}
 	}
 }

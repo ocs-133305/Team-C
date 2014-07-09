@@ -43,7 +43,7 @@ public class MenuGamen extends JFrame {
 		setTitle("\u30E1\u30CB\u30E5\u30FC\u753B\u9762");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(450, 300);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null);	// ウィンドウを中央に表示
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(240, 255, 240));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -62,7 +62,18 @@ public class MenuGamen extends JFrame {
 		contentPane.add(exitButton);
 
 		//　会員管理画面ボタン
-		JButton ukanriButton = new JButton("\u4F1A\u54E1\u7BA1\u7406");
+		JButton ukanriButton = new JButton("\u56F3\u66F8 / \u4F1A\u54E1\u7BA1\u7406");
+		ukanriButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try{
+					MainApp.menuFrame.setVisible(false);
+					MainApp.kanriFrame.setVisible(true);
+				}catch(NullPointerException ne){
+					
+				}
+			}
+		});
 		ukanriButton.setBounds(253, 91, 150, 33);
 		contentPane.add(ukanriButton);
 
@@ -71,10 +82,10 @@ public class MenuGamen extends JFrame {
 		renrakuButton.setBounds(253, 145, 148, 36);
 		contentPane.add(renrakuButton);
 
-		//　図書管理画面ボタン
+/*		//　図書管理画面ボタン
 		JButton bkanriButton = new JButton("\u56F3\u66F8\u7BA1\u7406");
 		bkanriButton.setBounds(253, 201, 148, 36);
-		contentPane.add(bkanriButton);
+		contentPane.add(bkanriButton);*/
 
 		// 貸出画面ボタン
 		JButton kashiButton = new JButton("\u8CB8\u51FA");
@@ -82,8 +93,8 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try{
-					MainApp.menuFrame.setVisible(false);
-					MainApp.kashiFrame.setVisible(true);
+					setVisible(false);
+					MainApp.kashiFrame.openKashidashi();
 				}catch(NullPointerException ne){
 					
 				}
@@ -94,11 +105,33 @@ public class MenuGamen extends JFrame {
 
 		//　返却画面ボタン
 		JButton henButton = new JButton("\u8FD4\u5374");
+		henButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try{
+					setVisible(false);
+					MainApp.henkyakuFrame.openHenkyaku();
+				}catch(NullPointerException ne){
+					
+				}
+			}
+		});
 		henButton.setBounds(39, 145, 148, 33);
 		contentPane.add(henButton);
 
 		//　検索画面ボタン
 		JButton kensakuButton = new JButton("\u691C\u7D22");
+		kensakuButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try{
+					MainApp.menuFrame.setVisible(false);
+					MainApp.kensakuFrame.setVisible(true);
+				}catch(NullPointerException ne){
+					
+				}
+			}
+		});
 		kensakuButton.setBounds(39, 201, 148, 32);
 		contentPane.add(kensakuButton);
 	}

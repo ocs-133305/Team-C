@@ -5,7 +5,6 @@
 
 import java.awt.EventQueue;
 
-
 public class MainApp {
 
 	public static MenuGamen menuFrame;
@@ -31,7 +30,7 @@ public class MainApp {
 //					kensakuFrame.setVisible(true);
 					menuFrame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+//					e.printStackTrace();
 				}
 			}
 		});
