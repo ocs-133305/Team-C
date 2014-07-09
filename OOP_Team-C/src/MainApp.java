@@ -10,6 +10,10 @@ public class MainApp {
 
 	public static MenuGamen menuFrame;
 	public static KashidashiGamen kashiFrame;
+	public static HenkyakuGamen henkyakuFrame;
+	public static HenkyakuRenrakuGamenTest renrakuFrame;
+	public static KanriGamen kanriFrame;
+	public static Kensaku kensakuFrame;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -18,10 +22,10 @@ public class MainApp {
 					// Še‰æ–Ê¶¬
 					menuFrame = new MenuGamen();
 					kashiFrame = new KashidashiGamen();
-					HenkyakuGamen henkyakuFrame = new HenkyakuGamen();
-					HenkyakuRenrakuGamenTest renrakuFrame = new HenkyakuRenrakuGamenTest();
-					KanriGamen kanriFrame = new KanriGamen();
-					Kensaku kensakuFrame = new Kensaku();
+					henkyakuFrame = new HenkyakuGamen();
+					renrakuFrame = new HenkyakuRenrakuGamenTest();
+					kanriFrame = new KanriGamen();
+					kensakuFrame = new Kensaku();
 					
 					//@ŒŸõ‰æ–Ê‚ğ‚Ü‚¸•\¦
 //					kensakuFrame.setVisible(true);

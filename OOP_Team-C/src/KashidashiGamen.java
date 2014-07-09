@@ -1,3 +1,7 @@
+/* 貸出画面クラス
+ * 
+ */
+
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,8 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 public class KashidashiGamen extends JFrame {
@@ -51,6 +53,13 @@ public class KashidashiGamen extends JFrame {
 	private String sqlstr;
 	private int uidval;
 	private int bidval;
+	
+	// コンポーネント有効化フラグ
+	private boolean usearchflg;
+	private boolean ucrearflg;
+	private boolean bsearchflg;
+	private boolean bcrearflg;
+	private boolean lendflg;
 
 	/**
 	 * Launch the application.
@@ -107,72 +116,81 @@ public class KashidashiGamen extends JFrame {
 		contentPane.add(uidField);
 		uidField.setColumns(10);
 		
-		//　会員検索ボタン
+		//　会員入力ボタン
 		usearchButton = new JButton("\u5165\u529B");
-		usearchButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+		usearchflg = true;
 		usearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				buf = uidField.getText();
-				if(buf.length() == 8){		// 文字数チェック
-					try{
-						// DB接続	成功したら処理開始
-						if(db.connect()){
-							uidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
-							
-							//　SQL文構築（仮）
-							sqlstr = "SELECT * FROM user WHERE user_id = " + uidval;
-							//　SQL実行（仮）
-							ResultSet rs = db.select(sqlstr);
-							
-							// 戻り値に中身があれば結果を表示（一件のみ）
-							if(rs.next()){
-	
-								//　各領域に表示
-								unameField.setText(rs.getString("user_name"));
-								uaddressField.setText(rs.getString("address"));
-								uphoneField.setText(rs.getString("phone"));
+				if(usearchflg){	//　ボタンが有効か？
+					buf = uidField.getText();
+					if(buf.length() == 8){		// 文字数チェック
+						try{
+							// DB接続	成功したら処理開始
+							if(db.connect()){
+								uidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
 								
-								// メッセージの表示
-								messageField.setText("会員番号：" + uidField.getText() + "の情報を表示します");
-								// 会員番号を編集不可に
-								uidField.setEditable(false);
-								// 検索ボタン無効化
-								usearchButton.setEnabled(false);
-								// キャンセルボタン有効化
-								ucrearButton.setEnabled(true);
-
+								//　SQL文構築（仮）
+								sqlstr = "SELECT * FROM user WHERE user_id = " + uidval;
+								//　SQL実行（仮）
+								ResultSet rs = db.select(sqlstr);
+								
+								// 戻り値に中身があれば結果を表示（一件のみ）
+								if(rs.next()){
+		
+									//　各領域に表示
+									unameField.setText(rs.getString("user_name"));
+									uaddressField.setText(rs.getString("address"));
+									uphoneField.setText(rs.getString("phone"));
+									
+									// メッセージの表示
+									messageField.setText("会員番号：" + uidField.getText() + "の情報を表示します");
+									// 会員番号を編集不可に
+									uidField.setEditable(false);
+									// 検索ボタン無効化
+									usearchflg = false;
+									usearchButton.setEnabled(usearchflg);
+									// キャンセルボタン有効化
+									ucrearflg = true;
+									ucrearButton.setEnabled(ucrearflg);
+									// 図書管理番号入力を有効化
+									bidField.setEnabled(true);
+									// 図書検索ボタン有効化
+									bsearchflg = true;
+									bsearchButton.setEnabled(bsearchflg);
+	
+								}else{
+									messageField.setText("該当する会員は存在しません");
+								}
 							}else{
-								messageField.setText("該当する会員は存在しません");
+								messageField.setText("データベースへの接続に失敗しました");
 							}
-						}else{
-							messageField.setText("データベースへの接続に失敗しました");
+							
+						}catch(NumberFormatException e){	//　数値変換に失敗
+							messageField.setText("会員番号：数値以外が入力されています");
+						}catch(Exception e){			//　予期せぬエラー
+							messageField.setText("会員番号：予期せぬエラーが発生しました");
 						}
-						
-					}catch(NumberFormatException e){	//　数値変換に失敗
-						messageField.setText("会員番号：数値以外が入力されています");
-					}catch(Exception e){			//　予期せぬエラー
-						messageField.setText("会員番号：予期せぬエラーが発生しました");
+					}else{
+						messageField.setText("図書管理番号：8桁の数値を入力してください");
 					}
-				}else{
-					messageField.setText("図書管理番号：8桁の数値を入力してください");
 				}
 			}
 		});
 		usearchButton.setBounds(345, 100, 101, 25);
 		contentPane.add(usearchButton);
 		
-		//　編集キャンセルボタン
+		//　会員領域クリアボタン
 		ucrearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
-		ucrearButton.setEnabled(false);
+		ucrearflg = false;
+		ucrearButton.setEnabled(ucrearflg);
 		ucrearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				crearUField();
-				messageField.setText("会員情報をクリアします");
+				if(ucrearflg){
+					crearUField();
+					messageField.setText("会員情報をクリアします");
+				}
 			}
 		});
 		ucrearButton.setBounds(458, 100, 101, 25);
@@ -221,71 +239,84 @@ public class KashidashiGamen extends JFrame {
 		
 		//　図書管理番号入力・表示領域
 		bidField = new JTextField();
+		bidField.setEnabled(false);
 		bidField.setBounds(114, 252, 219, 22);
 		contentPane.add(bidField);
 		bidField.setColumns(10);
 		
 		//　図書検索ボタン
 		bsearchButton = new JButton("\u5165\u529B");
+		bsearchflg = false;
+		bsearchButton.setEnabled(bsearchflg);
 		bsearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				buf = bidField.getText();
-				if(buf.length() == 8){		// 文字数チェック
-					try{
-						// DB接続	成功したら処理開始
-						if(db.connect()){
-							bidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
-							
-							//　SQL文構築（仮）
-							sqlstr = "SELECT * FROM book WHERE book_id = " + bidval;
-							//　SQL実行（仮）
-							ResultSet rs = db.select(sqlstr);
-							
-							// 戻り値に中身があれば結果を表示（一件のみ）
-							if(rs.next()){
-								//　各領域に表示
-								btitleField.setText(rs.getString("book_name"));
-								bauthorField.setText(rs.getString("author"));
+				if(bsearchflg){	// ボタンが有効か？
+					buf = bidField.getText();
+					if(buf.length() == 8){		// 文字数チェック
+						try{
+							// DB接続	成功したら処理開始
+							if(db.connect()){
+								bidval = Integer.parseInt(buf);	//　bidvalにintで格納（エラーチェックのため）
 								
-								// メッセージの表示
-								messageField.setText("図書管理番号：" + bidField.getText() + "の情報を表示します");
-								// 会員番号を編集不可に
-								bidField.setEditable(false);
-								// 検索ボタンを無効化
-								bsearchButton.setEnabled(false);
-								// キャンセルボタンを有効化
-								bcrearButton.setEnabled(true);
+								//　SQL文構築（仮）
+								sqlstr = "SELECT * FROM book WHERE book_id = " + bidval;
+								//　SQL実行（仮）
+								ResultSet rs = db.select(sqlstr);
+								
+								// 戻り値に中身があれば結果を表示（一件のみ）
+								if(rs.next()){
+									//　各領域に表示
+									btitleField.setText(rs.getString("book_name"));
+									bauthorField.setText(rs.getString("author"));
+									
+									// メッセージの表示
+									messageField.setText("図書管理番号：" + bidval + "の情報を表示します");
+									// 会員番号を編集不可に
+									bidField.setEditable(false);
+									// 検索ボタンを無効化
+									bsearchflg = false;
+									bsearchButton.setEnabled(bsearchflg);
+									// キャンセルボタンを有効化
+									bcrearflg = true;
+									bcrearButton.setEnabled(bcrearflg);
+									// 貸出ボタンを有効化
+									lendflg = true;
+									lendButton.setEnabled(lendflg);
+								}else{
+									messageField.setText("該当する図書は存在しません");
+								}
 							}else{
-								messageField.setText("該当する図書は存在しません");
+								messageField.setText("データベースへの接続に失敗しました");
 							}
-						}else{
-							messageField.setText("データベースへの接続に失敗しました");
+							
+						}catch(NumberFormatException e0){	//　数値変換に失敗
+							messageField.setText("図書管理番号：数値以外が入力されています");
+						}catch(Exception e1){			//　予期せぬエラー
+							messageField.setText("図書管理番号：予期せぬエラーが発生しました");
 						}
-						
-					}catch(NumberFormatException e0){	//　数値変換に失敗
-						messageField.setText("図書管理番号：数値以外が入力されています");
-					}catch(Exception e1){			//　予期せぬエラー
-						messageField.setText("図書管理番号：予期せぬエラーが発生しました");
+					}else{
+						messageField.setText("図書管理番号：8桁の数値を入力してください");
 					}
-				}else{
-					messageField.setText("図書管理番号：8桁の数値を入力してください");
 				}
 			}
 		});
 		bsearchButton.setBounds(345, 251, 101, 25);
 		contentPane.add(bsearchButton);
 		
-		//　図書検索ボタン
+		//　図書領域クリアボタン
 		bcrearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
 		bcrearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				crearBField();
-				messageField.setText("図書情報をクリアしました");
+				if(bcrearflg){
+					crearBField();
+					messageField.setText("図書情報をクリアしました");
+				}
 			}
 		});
-		bcrearButton.setEnabled(false);
+		bcrearflg = false;
+		bcrearButton.setEnabled(bcrearflg);
 		bcrearButton.setBounds(458, 251, 101, 25);
 		contentPane.add(bcrearButton);
 		
@@ -315,9 +346,40 @@ public class KashidashiGamen extends JFrame {
 		
 		//　貸出ボタン
 		lendButton = new JButton("\u8CB8\u51FA");
+		lendflg = false;
+		lendButton.setEnabled(lendflg);
 		lendButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// DB接続	成功したら処理開始
+				if(lendflg){	// ボタンが有効化されているか？
+					try{
+						if(db.connect()){	
+					
+							sqlstr = "SELECT MAX(lend_id)+1 FROM lend";
+							ResultSet rs = db.select(sqlstr);
+						
+							int lend_id = 0;
+							if(rs.next()){
+								lend_id = rs.getInt(1);
+							}
+						
+						//　SQL文構築
+							sqlstr = "INSERT INTO lend VALUES(" + lend_id + ",CURRENT_DATE()," + uidval + ","+ bidval + ", CURRENT_DATE()+7 ,0 ,NULL);";
+						//　SQL実行
+							if(-1 != db.update(sqlstr)){
+								messageField.setText("貸出情報の登録に成功しました。");
+								crearBField();
+							}else{
+								messageField.setText("貸出情報の追加に失敗しました。");
+							}
+						}else{
+							messageField.setText("データベースへの接続に失敗しました");
+						}
+					}catch(Exception e2){
+						messageField.setText("データの取得に失敗しました。");
+					}
+				}
 			}
 		});
 		lendButton.setBounds(12, 405, 558, 37);
@@ -325,15 +387,21 @@ public class KashidashiGamen extends JFrame {
 		
 	}
 	
-	// 会員情報領域をクリアするメソッド
+	// 会員情報領域をクリアするメソッド(=全領域のクリア)
 	public void crearUField(){
+		crearBField();
 		uidField.setText("");
 		uidField.setEditable(true);
 		unameField.setText("");
 		uaddressField.setText("");
 		uphoneField.setText("");
-		usearchButton.setEnabled(true);
-		ucrearButton.setEnabled(false);
+		usearchflg = true;
+		usearchButton.setEnabled(usearchflg);
+		ucrearflg = false;
+		ucrearButton.setEnabled(ucrearflg);
+		bidField.setEnabled(false);
+		bsearchflg = false;
+		bsearchButton.setEnabled(bsearchflg);
 	}
 	
 	// 図書情報領域をクリアするメソッド
@@ -342,7 +410,12 @@ public class KashidashiGamen extends JFrame {
 		bidField.setEditable(true);
 		btitleField.setText("");
 		bauthorField.setText("");
-		bsearchButton.setEnabled(true);
-		bcrearButton.setEnabled(false);
+		bsearchflg = true;
+		bsearchButton.setEnabled(bsearchflg);
+		bcrearflg = false;
+		bcrearButton.setEnabled(bcrearflg);
+		lendflg = false;
+		lendButton.setEnabled(lendflg);
 	}
+	
 }
