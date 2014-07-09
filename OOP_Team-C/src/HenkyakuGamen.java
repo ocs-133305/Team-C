@@ -130,7 +130,7 @@ public class HenkyakuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try{
-					MainApp.henkyakuFrame.setVisible(false);
+					setVisible(false);
 					MainApp.menuFrame.setVisible(true);
 				}catch(NullPointerException ne){
 					
@@ -244,11 +244,11 @@ public class HenkyakuGamen extends JFrame {
 									rs.close();
 									rs2.close();
 									rs3.close();
-									db.close();
 	
 								} else {
 									messageField.setText("該当する会員は存在しません");
 								}
+								db.close();
 							} else {
 								messageField.setText("データベースへの接続に失敗しました");
 							}

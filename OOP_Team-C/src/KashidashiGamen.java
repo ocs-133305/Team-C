@@ -178,6 +178,10 @@ public class KashidashiGamen extends JFrame {
 								} else {
 									messageField.setText("該当する会員は存在しません");
 								}
+
+								// クローズ
+								rs.close();
+								db.close();
 							} else {
 								messageField.setText("データベースへの接続に失敗しました");
 							}
@@ -283,7 +287,7 @@ public class KashidashiGamen extends JFrame {
 
 								// 戻り値に中身があれば結果を表示（一件のみ）
 								if (rs.next()) {
-									// 　各領域に表示
+									// 各領域に表示
 									btitleField.setText(rs
 											.getString("book_name"));
 									bauthorField.setText(rs.getString("author"));
@@ -305,7 +309,7 @@ public class KashidashiGamen extends JFrame {
 								} else {
 									messageField.setText("該当する図書は存在しません");
 								}
-								
+
 								// クローズ
 								rs.close();
 								db.close();
@@ -343,24 +347,24 @@ public class KashidashiGamen extends JFrame {
 		bcrearButton.setBounds(458, 251, 101, 25);
 		contentPane.add(bcrearButton);
 
-		// 　ラベル「タイトル」
+		// ラベル「タイトル」
 		btitleLabel = new JLabel("\u30BF\u30A4\u30C8\u30EB");
 		btitleLabel.setBounds(12, 284, 72, 16);
 		contentPane.add(btitleLabel);
 
-		// 　タイトル表示領域
+		// タイトル表示領域
 		btitleField = new JTextField();
 		btitleField.setEditable(false);
 		btitleField.setBounds(114, 281, 219, 22);
 		contentPane.add(btitleField);
 		btitleField.setColumns(10);
 
-		// 　ラベル「著者」
+		// ラベル「著者」
 		bauthorLabel = new JLabel("\u8457\u8005");
 		bauthorLabel.setBounds(12, 313, 57, 16);
 		contentPane.add(bauthorLabel);
 
-		// 　著者表示領域
+		// 著者表示領域
 		bauthorField = new JTextField();
 		bauthorField.setEditable(false);
 		bauthorField.setBounds(114, 310, 219, 22);
