@@ -1,5 +1,5 @@
 /* 貸出画面クラス
- * 
+ * GUI制作：武田
  */
 
 import java.awt.EventQueue;
@@ -61,7 +61,7 @@ public class KashidashiGamen extends JFrame {
 	private boolean lendflg;
 
 	/**
-	 * Launch the application.
+	 * Launch the application. 単体テスト用
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -97,9 +97,9 @@ public class KashidashiGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					MainApp.kashiFrame.setVisible(false);
-					MainApp.menuFrame.setVisible(true);
-				} catch (NullPointerException ne) {
+					setVisible(false);
+					MainApp.menuFrame.openMenu();
+				} catch (Exception oe) {
 
 				}
 			}
@@ -452,11 +452,7 @@ public class KashidashiGamen extends JFrame {
 
 	// 画面オープンメソッド
 	public void openKashidashi() {
-		try {
-			this.setVisible(true);
-		} catch (NullPointerException ne) {
-
-		}
+		this.setVisible(true);
 	}
 
 }

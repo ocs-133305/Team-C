@@ -25,12 +25,14 @@ public class MainApp {
 					renrakuFrame = new HenkyakuRenrakuGamenTest();
 					kanriFrame = new KanriGamen();
 					kensakuFrame = new Kensaku();
-					
-					//　検索画面をまず表示
-//					kensakuFrame.setVisible(true);
+
+					// 検索画面をまず表示
+					// kensakuFrame.setVisible(true);
+
+					// テスト用
 					menuFrame.setVisible(true);
 				} catch (Exception e) {
-//					e.printStackTrace();
+					// e.printStackTrace();
 				}
 			}
 		});

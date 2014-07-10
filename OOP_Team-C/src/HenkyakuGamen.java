@@ -49,8 +49,8 @@ public class HenkyakuGamen extends JFrame {
 	private String sqlstr;
 	private int uidval;
 	private int bidval;
-	
-	//　コンポーネント有効化フラグ
+
+	// 　コンポーネント有効化フラグ
 	private boolean usearchflg;
 	private boolean ucrearflg;
 	private boolean retflg;
@@ -69,17 +69,17 @@ public class HenkyakuGamen extends JFrame {
 
 		@Override
 		protected void processMouseEvent(MouseEvent e) {
-			try{
+			try {
 				if (e.getID() == MouseEvent.MOUSE_PRESSED
-						&& !getCellBounds(0, getModel().getSize() - 1).contains(
-								e.getPoint())) {
+						&& !getCellBounds(0, getModel().getSize() - 1)
+								.contains(e.getPoint())) {
 					e.consume();
 					requestFocusInWindow();
 				} else {
 					super.processMouseEvent(convertMouseEvent(e));
 				}
-			}catch(NullPointerException ne){
-				
+			} catch (NullPointerException ne) {
+
 			}
 		}
 
@@ -118,7 +118,7 @@ public class HenkyakuGamen extends JFrame {
 		setTitle("\u8FD4\u5374\u753B\u9762");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 500);
-		setLocationRelativeTo(null);	// ウィンドウを中央に表示
+		setLocationRelativeTo(null); // ウィンドウを中央に表示
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -129,11 +129,11 @@ public class HenkyakuGamen extends JFrame {
 		exitButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				try{
+				try {
 					setVisible(false);
 					MainApp.menuFrame.setVisible(true);
-				}catch(NullPointerException ne){
-					
+				} catch (Exception oe) {
+
 				}
 			}
 		});
@@ -184,29 +184,31 @@ public class HenkyakuGamen extends JFrame {
 		usearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(usearchflg){
+				if (usearchflg) {
 					buf = uidField.getText();
 					if (buf.length() == 8) { // 文字数チェック
 						try {
 							// DB接続 成功したら処理開始
 							if (db.connect()) {
 								uidval = Integer.parseInt(buf); // bidvalにintで格納（エラーチェックのため）
-	
+
 								// SQL文構築（仮）
 								sqlstr = "SELECT * FROM user WHERE user_id = "
 										+ uidval;
 								// SQL実行（仮）
 								ResultSet rs = db.select(sqlstr);
-	
+
 								// 戻り値に中身があれば結果を表示（一件のみ）
-	
+
 								if (rs.next()) {
-	
+
 									// 各領域に表示
-									unameField.setText(rs.getString("user_name"));
-									uaddressField.setText(rs.getString("address"));
+									unameField.setText(rs
+											.getString("user_name"));
+									uaddressField.setText(rs
+											.getString("address"));
 									uphoneField.setText(rs.getString("phone"));
-	
+
 									// メッセージの表示
 									messageField.setText("会員番号："
 											+ uidField.getText() + "の情報を表示します");
@@ -218,7 +220,7 @@ public class HenkyakuGamen extends JFrame {
 									// キャンセルボタン有効化
 									ucrearflg = true;
 									ucrearButton.setEnabled(ucrearflg);
-	
+
 									// model.clear();
 									ResultSet rs2 = db
 											.select("SELECT COUNT(*)  FROM lend WHERE flg =0 and user_id ="
@@ -227,11 +229,11 @@ public class HenkyakuGamen extends JFrame {
 										int idx = rs2.getInt(1);
 										Henkyaku = new int[idx];
 									}
-	
+
 									ResultSet rs3 = db
 											.select("SELECT book_id,book_name FROM lend NATURAL JOIN book WHERE flg=0 and user_id ="
 													+ uidval);
-	
+
 									int j = 0;
 									while (rs3.next()) {
 										Henkyaku[j] = rs3.getInt("book_id");
@@ -244,7 +246,7 @@ public class HenkyakuGamen extends JFrame {
 									rs.close();
 									rs2.close();
 									rs3.close();
-	
+
 								} else {
 									messageField.setText("該当する会員は存在しません");
 								}
@@ -252,7 +254,7 @@ public class HenkyakuGamen extends JFrame {
 							} else {
 								messageField.setText("データベースへの接続に失敗しました");
 							}
-	
+
 						} catch (NumberFormatException e) { // 数値変換に失敗
 							messageField.setText("会員番号：数値以外が入力されています");
 						} catch (Exception e) { // 予期せぬエラー
@@ -274,7 +276,7 @@ public class HenkyakuGamen extends JFrame {
 		ucrearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(ucrearflg){
+				if (ucrearflg) {
 					crearUField();
 					model.clear();
 					messageField.setText("会員情報をクリアします");
@@ -328,11 +330,11 @@ public class HenkyakuGamen extends JFrame {
 		// 返却ボタン
 		retButton = new JButton("\u8FD4\u5374");
 		retflg = false;
-		retButton.setEnabled(retflg);	// デフォルトでは無効化
+		retButton.setEnabled(retflg); // デフォルトでは無効化
 		retButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(retflg){
+				if (retflg) {
 					int[] index = list.getSelectedIndices();
 					int KENSU = 0;
 					if (index.length == 0) {
@@ -357,11 +359,11 @@ public class HenkyakuGamen extends JFrame {
 							int idx = rs2.getInt(1);
 							Henkyaku = new int[idx];
 						}
-	
+
 						ResultSet rs3 = db
 								.select("SELECT book_id,book_name FROM lend NATURAL JOIN book WHERE flg=0 and user_id ="
 										+ uidval);
-	
+
 						int j = 0;
 						while (rs3.next()) {
 							Henkyaku[j] = rs3.getInt("book_id");
@@ -377,7 +379,7 @@ public class HenkyakuGamen extends JFrame {
 						// 返却ボタン無効化
 						retflg = false;
 						retButton.setEnabled(retflg);
-	
+
 						HenkyakuRenrakuGamenTest.List();
 					} catch (SQLException e1) {
 						messageField.setText("データベース接続エラー3");
@@ -404,13 +406,9 @@ public class HenkyakuGamen extends JFrame {
 		retflg = false;
 		retButton.setEnabled(retflg);
 	}
-	
+
 	// 画面オープンメソッド
-	public void openHenkyaku(){
-		try{
-			this.setVisible(true);
-		}catch(NullPointerException ne){
-			
-		}
+	public void openHenkyaku() {
+		this.setVisible(true);
 	}
 }

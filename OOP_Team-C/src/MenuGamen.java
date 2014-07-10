@@ -106,8 +106,12 @@ public class MenuGamen extends JFrame {
 		kashiButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setVisible(false);
-				MainApp.kashiFrame.openKashidashi();
+				try {
+					setVisible(false);
+					MainApp.kashiFrame.openKashidashi();
+				} catch (Exception e3) {
+
+				}
 			}
 		});
 		kashiButton.setBounds(39, 91, 148, 33);
@@ -118,8 +122,12 @@ public class MenuGamen extends JFrame {
 		henButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				setVisible(false);
-				MainApp.henkyakuFrame.openHenkyaku();
+				try {
+					setVisible(false);
+					MainApp.henkyakuFrame.openHenkyaku();
+				} catch (Exception e4) {
+
+				}
 			}
 		});
 		henButton.setBounds(39, 145, 148, 33);
@@ -140,5 +148,9 @@ public class MenuGamen extends JFrame {
 		});
 		kensakuButton.setBounds(39, 201, 148, 32);
 		contentPane.add(kensakuButton);
+	}
+
+	public void openMenu() {
+		this.setVisible(true);
 	}
 }
