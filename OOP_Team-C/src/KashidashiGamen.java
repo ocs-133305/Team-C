@@ -101,6 +101,8 @@ public class KashidashiGamen extends JFrame {
 					MainApp.menuFrame.openMenu();
 				} catch (Exception oe) {
 
+				} finally {
+					crearUField();
 				}
 			}
 		});

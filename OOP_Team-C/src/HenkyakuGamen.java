@@ -134,6 +134,8 @@ public class HenkyakuGamen extends JFrame {
 					MainApp.menuFrame.setVisible(true);
 				} catch (Exception oe) {
 
+				} finally {
+					crearUField();
 				}
 			}
 		});
