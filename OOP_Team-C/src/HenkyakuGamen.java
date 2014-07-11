@@ -50,7 +50,7 @@ public class HenkyakuGamen extends JFrame {
 	private int uidval;
 	private int bidval;
 
-	// 　コンポーネント有効化フラグ
+	// コンポーネント有効化フラグ
 	private boolean usearchflg;
 	private boolean ucrearflg;
 	private boolean retflg;
