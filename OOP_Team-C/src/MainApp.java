@@ -4,6 +4,7 @@
  */
 
 import java.awt.EventQueue;
+import java.sql.SQLException;
 
 public class MainApp {
 
@@ -27,10 +28,12 @@ public class MainApp {
 					kensakuFrame = new Kensaku();
 
 					// 検索画面をまず表示
-					// kensakuFrame.setVisible(true);
+					kensakuFrame.openKensaku();
 
-					// テスト用
-					menuFrame.setVisible(true);
+					// テスト用 メニュー画面を開く場合
+//					menuFrame.openMenu();
+				} catch (SQLException e) {
+					// e.printStackTrace();
 				} catch (Exception e) {
 					// e.printStackTrace();
 				}

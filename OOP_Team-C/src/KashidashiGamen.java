@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import java.awt.Toolkit;
 
 public class KashidashiGamen extends JFrame {
 
@@ -80,6 +81,7 @@ public class KashidashiGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public KashidashiGamen() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(KashidashiGamen.class.getResource("/picture/book84.png")));
 		db = new DBConnect();
 
 		setTitle("\u8CB8\u51FA\u753B\u9762");

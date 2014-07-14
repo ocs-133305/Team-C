@@ -113,6 +113,7 @@ public class HenkyakuGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public HenkyakuGamen() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(HenkyakuGamen.class.getResource("/picture/book84.png")));
 		db = new DBConnect();
 
 		setTitle("\u8FD4\u5374\u753B\u9762");

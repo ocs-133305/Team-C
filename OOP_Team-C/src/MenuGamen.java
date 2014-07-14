@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
 
 public class MenuGamen extends JFrame {
 
@@ -42,6 +43,7 @@ public class MenuGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public MenuGamen() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuGamen.class.getResource("/picture/book84.png")));
 		setForeground(new Color(255, 240, 245));
 		setBackground(new Color(255, 250, 205));
 		setTitle("\u30E1\u30CB\u30E5\u30FC\u753B\u9762");
@@ -151,6 +153,6 @@ public class MenuGamen extends JFrame {
 	}
 
 	public void openMenu() {
-		this.setVisible(true);
+		setVisible(true);
 	}
 }

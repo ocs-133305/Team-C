@@ -83,6 +83,8 @@ public class DBConnect {
 			con.close();
 		} catch (SQLException e) {
 //			e.printStackTrace();
+		} catch (NullPointerException e) {
+//			e.printStackTrace();
 		}
 
 	}
