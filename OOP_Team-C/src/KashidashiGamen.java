@@ -44,8 +44,8 @@ public class KashidashiGamen extends JFrame {
 
 	// 編集ボタン
 	private JButton lendButton;
-	private JButton ucrearButton;
-	private JButton bcrearButton;
+	private JButton uclearButton;
+	private JButton bclearButton;
 
 	// 変数など
 	private DBConnect db;
@@ -56,9 +56,9 @@ public class KashidashiGamen extends JFrame {
 
 	// コンポーネント有効化フラグ
 	private boolean usearchflg;
-	private boolean ucrearflg;
+	private boolean uclearflg;
 	private boolean bsearchflg;
-	private boolean bcrearflg;
+	private boolean bclearflg;
 	private boolean lendflg;
 
 	/**
@@ -171,8 +171,8 @@ public class KashidashiGamen extends JFrame {
 									usearchflg = false;
 									usearchButton.setEnabled(usearchflg);
 									// キャンセルボタン有効化
-									ucrearflg = true;
-									ucrearButton.setEnabled(ucrearflg);
+									uclearflg = true;
+									uclearButton.setEnabled(uclearflg);
 									// 図書管理番号入力を有効化
 									bidField.setEnabled(true);
 									// 図書検索ボタン有効化
@@ -205,20 +205,20 @@ public class KashidashiGamen extends JFrame {
 		contentPane.add(usearchButton);
 
 		// 会員領域クリアボタン
-		ucrearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
-		ucrearflg = false;
-		ucrearButton.setEnabled(ucrearflg);
-		ucrearButton.addMouseListener(new MouseAdapter() {
+		uclearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
+		uclearflg = false;
+		uclearButton.setEnabled(uclearflg);
+		uclearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ucrearflg) {
+				if (uclearflg) {
 					crearUField();
 					messageField.setText("会員情報をクリアします");
 				}
 			}
 		});
-		ucrearButton.setBounds(458, 100, 101, 25);
-		contentPane.add(ucrearButton);
+		uclearButton.setBounds(458, 100, 101, 25);
+		contentPane.add(uclearButton);
 
 		// ラベル「氏名」
 		unameLabel = new JLabel("\u6C0F\u540D");
@@ -305,8 +305,8 @@ public class KashidashiGamen extends JFrame {
 									bsearchflg = false;
 									bsearchButton.setEnabled(bsearchflg);
 									// キャンセルボタンを有効化
-									bcrearflg = true;
-									bcrearButton.setEnabled(bcrearflg);
+									bclearflg = true;
+									bclearButton.setEnabled(bclearflg);
 									// 貸出ボタンを有効化
 									lendflg = true;
 									lendButton.setEnabled(lendflg);
@@ -336,20 +336,20 @@ public class KashidashiGamen extends JFrame {
 		contentPane.add(bsearchButton);
 
 		// 図書領域クリアボタン
-		bcrearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
-		bcrearButton.addMouseListener(new MouseAdapter() {
+		bclearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
+		bclearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (bcrearflg) {
+				if (bclearflg) {
 					crearBField();
 					messageField.setText("図書情報をクリアしました");
 				}
 			}
 		});
-		bcrearflg = false;
-		bcrearButton.setEnabled(bcrearflg);
-		bcrearButton.setBounds(458, 251, 101, 25);
-		contentPane.add(bcrearButton);
+		bclearflg = false;
+		bclearButton.setEnabled(bclearflg);
+		bclearButton.setBounds(458, 251, 101, 25);
+		contentPane.add(bclearButton);
 
 		// ラベル「タイトル」
 		btitleLabel = new JLabel("\u30BF\u30A4\u30C8\u30EB");
@@ -433,8 +433,8 @@ public class KashidashiGamen extends JFrame {
 		uphoneField.setText("");
 		usearchflg = true;
 		usearchButton.setEnabled(usearchflg);
-		ucrearflg = false;
-		ucrearButton.setEnabled(ucrearflg);
+		uclearflg = false;
+		uclearButton.setEnabled(uclearflg);
 		bidField.setEnabled(false);
 		bsearchflg = false;
 		bsearchButton.setEnabled(bsearchflg);
@@ -448,8 +448,8 @@ public class KashidashiGamen extends JFrame {
 		bauthorField.setText("");
 		bsearchflg = true;
 		bsearchButton.setEnabled(bsearchflg);
-		bcrearflg = false;
-		bcrearButton.setEnabled(bcrearflg);
+		bclearflg = false;
+		bclearButton.setEnabled(bclearflg);
 		lendflg = false;
 		lendButton.setEnabled(lendflg);
 	}

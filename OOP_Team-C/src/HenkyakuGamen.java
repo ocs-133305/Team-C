@@ -41,18 +41,17 @@ public class HenkyakuGamen extends JFrame {
 
 	// 編集ボタン
 	private JButton retButton;
-	private JButton ucrearButton;
+	private JButton uclearButton;
 
 	// 変数など
 	private DBConnect db;
 	private String buf;
 	private String sqlstr;
 	private int uidval;
-	private int bidval;
 
 	// コンポーネント有効化フラグ
 	private boolean usearchflg;
-	private boolean ucrearflg;
+	private boolean uclearflg;
 	private boolean retflg;
 
 	private int[] Henkyaku = null;
@@ -221,8 +220,8 @@ public class HenkyakuGamen extends JFrame {
 									usearchflg = false;
 									usearchButton.setEnabled(usearchflg);
 									// キャンセルボタン有効化
-									ucrearflg = true;
-									ucrearButton.setEnabled(ucrearflg);
+									uclearflg = true;
+									uclearButton.setEnabled(uclearflg);
 
 									// model.clear();
 									ResultSet rs2 = db
@@ -273,21 +272,21 @@ public class HenkyakuGamen extends JFrame {
 		contentPane.add(usearchButton);
 
 		// 編集キャンセルボタン
-		ucrearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
-		ucrearflg = false;
-		ucrearButton.setEnabled(ucrearflg);
-		ucrearButton.addMouseListener(new MouseAdapter() {
+		uclearButton = new JButton("\u30AD\u30E3\u30F3\u30BB\u30EB");
+		uclearflg = false;
+		uclearButton.setEnabled(uclearflg);
+		uclearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ucrearflg) {
+				if (uclearflg) {
 					crearUField();
 					model.clear();
 					messageField.setText("会員情報をクリアします");
 				}
 			}
 		});
-		ucrearButton.setBounds(458, 100, 101, 25);
-		contentPane.add(ucrearButton);
+		uclearButton.setBounds(458, 100, 101, 25);
+		contentPane.add(uclearButton);
 
 		// ラベル「氏名」
 		unameLabel = new JLabel("\u6C0F\u540D");
@@ -383,7 +382,7 @@ public class HenkyakuGamen extends JFrame {
 						retflg = false;
 						retButton.setEnabled(retflg);
 
-						HenkyakuRenrakuGamenTest.List();
+						HenkyakuRenrakuGamen.List();
 					} catch (SQLException e1) {
 						messageField.setText("データベース接続エラー3");
 					}
@@ -404,8 +403,8 @@ public class HenkyakuGamen extends JFrame {
 		uphoneField.setText("");
 		usearchflg = true;
 		usearchButton.setEnabled(usearchflg);
-		ucrearflg = false;
-		ucrearButton.setEnabled(ucrearflg);
+		uclearflg = false;
+		uclearButton.setEnabled(uclearflg);
 		retflg = false;
 		retButton.setEnabled(retflg);
 	}

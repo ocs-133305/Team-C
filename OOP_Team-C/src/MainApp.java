@@ -11,7 +11,7 @@ public class MainApp {
 	public static MenuGamen menuFrame;
 	public static KashidashiGamen kashiFrame;
 	public static HenkyakuGamen henkyakuFrame;
-	public static HenkyakuRenrakuGamenTest renrakuFrame;
+	public static HenkyakuRenrakuGamen renrakuFrame;
 	public static KanriGamen kanriFrame;
 	public static Kensaku kensakuFrame;
 
@@ -23,7 +23,7 @@ public class MainApp {
 					menuFrame = new MenuGamen();
 					kashiFrame = new KashidashiGamen();
 					henkyakuFrame = new HenkyakuGamen();
-					renrakuFrame = new HenkyakuRenrakuGamenTest();
+					renrakuFrame = new HenkyakuRenrakuGamen();
 					kanriFrame = new KanriGamen();
 					kensakuFrame = new Kensaku();
 

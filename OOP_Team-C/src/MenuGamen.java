@@ -70,6 +70,7 @@ public class MenuGamen extends JFrame {
 				Component c = (Component) e.getSource();
 				Window w = SwingUtilities.getWindowAncestor(c);
 				w.dispose();
+				System.exit(0);
 			}
 		});
 		exitButton.setBounds(253, 23, 148, 36);
@@ -82,8 +83,8 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					MainApp.menuFrame.setVisible(false);
-					MainApp.kanriFrame.setVisible(true);
+					setVisible(false);
+					MainApp.kanriFrame.openKanri();
 				} catch (NullPointerException ne) {
 
 				}
@@ -141,7 +142,7 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					MainApp.menuFrame.setVisible(false);
+					setVisible(false);
 					MainApp.kensakuFrame.setVisible(true);
 				} catch (NullPointerException ne) {
 
