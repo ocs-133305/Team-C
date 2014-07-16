@@ -1,3 +1,5 @@
+
+
 /*
  * 作成者：水口 2014/07/11
  */
@@ -67,8 +69,7 @@ public class Kensaku extends JFrame {
 		db = new DBConnect();
 		setTitle("\u691C\u7D22\u753B\u9762");
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				Kensaku.class.getResource("/picture/book84.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Kensaku.class.getResource("/picture/book84.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 550);
 		setLocationRelativeTo(null);
@@ -79,12 +80,11 @@ public class Kensaku extends JFrame {
 
 		// エラー表示領域
 		textField = new JTextField();
-		textField
-				.setText("\u30A8\u30E9\u30FC\u3084\u8B66\u544A\u306E\u8868\u793A\u9818\u57DF");
-		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		textField.setEditable(false);
+		textField.setText("\u30A8\u30E9\u30FC\u3084\u8B66\u544A\u306E\u8868\u793A\u9818\u57DF");
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		textField.setColumns(10);
-		textField.setBounds(20, 13, 521, 50);
+		textField.setBounds(20, 22, 550, 30);
 		contentPane.add(textField);
 
 		// タイトル
@@ -121,7 +121,7 @@ public class Kensaku extends JFrame {
 
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(this.arrayS()));
-		comboBox.setBounds(178, 194, 199, 34);
+		comboBox.setBounds(120, 194, 220, 34);
 		contentPane.add(comboBox);
 
 		// 検索ボタン
@@ -139,7 +139,7 @@ public class Kensaku extends JFrame {
 		label_3.setVerticalAlignment(SwingConstants.BOTTOM);
 		label_3.setHorizontalAlignment(SwingConstants.CENTER);
 		label_3.setFont(new Font("MS UI Gothic", Font.BOLD, 22));
-		label_3.setBounds(22, 210, 360, 54);
+		label_3.setBounds(22, 210, 519, 54);
 		contentPane.add(label_3);
 
 		final JScrollPane scrollPane = new JScrollPane((Component) null);
@@ -149,14 +149,12 @@ public class Kensaku extends JFrame {
 		contentPane.add(scrollPane);
 
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Kensaku.class
-				.getResource("/picture/book9.png")));
+		lblNewLabel.setIcon(new ImageIcon(Kensaku.class.getResource("/picture/book9.png")));
 		lblNewLabel.setBounds(484, 103, 57, 63);
 		contentPane.add(lblNewLabel);
 
 		JMenu mnNewMenu = new JMenu("");
-		mnNewMenu.setIcon(new ImageIcon(Kensaku.class
-				.getResource("/picture/\u58C1\u7D193.jpg")));
+		mnNewMenu.setIcon(new ImageIcon(Kensaku.class.getResource("/picture/\u58C1\u7D193.jpg")));
 		mnNewMenu.setBounds(-31, -398, 625, 925);
 		contentPane.add(mnNewMenu);
 
@@ -166,6 +164,7 @@ public class Kensaku extends JFrame {
 				/*
 				 * マウスをクリックしたときの動作
 				 */
+				textField.setText("\u30A8\u30E9\u30FC\u3084\u8B66\u544A\u306E\u8868\u793A\u9818\u57DF");
 				if (db.connect()) {
 					// テーブルリセット
 					model.setRowCount(0);
@@ -268,7 +267,7 @@ public class Kensaku extends JFrame {
 							model.addRow(tabledata[0]);
 						}
 
-						// 表示
+						textField.setText(s+"冊の図書が検索されました");
 
 						rs.close();
 						rs2.close();
@@ -332,7 +331,7 @@ public class Kensaku extends JFrame {
 						model.addRow(tabledata[0]);
 					}
 
-					// 表示
+					textField.setText(s+"冊の図書が検索されました");
 
 					rs.close();
 					rs2.close();
