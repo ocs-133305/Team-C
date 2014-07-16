@@ -136,6 +136,7 @@ public class HenkyakuGamen extends JFrame {
 
 				} finally {
 					crearUField();
+					model.clear();
 				}
 			}
 		});

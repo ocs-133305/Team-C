@@ -1,7 +1,6 @@
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Window;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
@@ -18,9 +17,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import java.awt.Toolkit;
 
 public class HenkyakuRenrakuGamen extends JFrame {
 
@@ -30,11 +27,12 @@ public class HenkyakuRenrakuGamen extends JFrame {
 
 	final static DefaultListModel<Object> model = new DefaultListModel<Object>();
 	final JList<Object> list = new JList<Object>((ListModel<Object>) model);
+	final JTextArea textArea = new JTextArea();
 
 	static JLabel label;
 	private static int[] user_id;
 
-	static String address, mail;
+	static String[] address, mail;
 	private JTextField mailtext;
 	private JTextField addresstext;
 
@@ -57,7 +55,8 @@ public class HenkyakuRenrakuGamen extends JFrame {
 	public HenkyakuRenrakuGamen() throws SQLException {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HenkyakuRenrakuGamen.class.getResource("/picture/book84.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 550);
+		setSize(600, 550);
+		setLocationRelativeTo(null); // ウィンドウを中央に表示
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -115,7 +114,7 @@ public class HenkyakuRenrakuGamen extends JFrame {
 		JLabel label_1 = new JLabel("貸出番号  ： 返却期日  ：タイトル ");
 		scrollPane_1.setColumnHeaderView(label_1);
 
-		final JTextArea textArea = new JTextArea();
+		
 		scrollPane_1.setViewportView(textArea);
 
 		JButton button = new JButton("返却連絡済");
@@ -176,11 +175,13 @@ public class HenkyakuRenrakuGamen extends JFrame {
 				if (idx == -1) {
 					mailtext.setText(""); // 選択されていない状態でボタンが押されたときの処理
 				} else if (mail != null) {
-					mailtext.setText(mail);
+					mailtext.setText(mail[idx]);
+					addresstext.setText(address[idx]);
 				} else {
 					mailtext.setText("メールアドレスが登録されていません");
+					addresstext.setText(address[idx]);
 				}
-				addresstext.setText(address);
+				
 				idx = -1;
 				idx = list.getSelectedIndex();
 				if (idx == -1) {
@@ -220,7 +221,6 @@ public class HenkyakuRenrakuGamen extends JFrame {
 
 		for (int i = str.length(); i < 8; i++) {
 			str = "0" + str;
-			System.out.println(str);
 		}
 		return str;
 	}
@@ -234,6 +234,9 @@ public class HenkyakuRenrakuGamen extends JFrame {
 			if (rs2.next()) {
 				idx = rs2.getInt(1);
 				user_id = new int[idx];
+				address = new String[idx];
+				mail = new String[idx];
+				
 			}
 			ResultSet rs = DB
 					.select("SELECT user_id,user_name,address,mail FROM lend NATURAL JOIN user WHERE SYSDATE()>=return_line  and  flg=0 and contact_day IS NULL GROUP BY user_name;");
@@ -244,8 +247,8 @@ public class HenkyakuRenrakuGamen extends JFrame {
 			while (rs.next()) {
 				user_id[j] = rs.getInt("user_id");
 				String user_name = rs.getString("user_name");
-				address = rs.getString("address");
-				mail = rs.getString("mail");
+				address[j] = rs.getString("address");
+				mail[j] = rs.getString("mail");
 				String hyoujiID = IDS(user_id[j]);
 				model.addElement(hyoujiID + "：" + user_name + "\n");
 				j++;

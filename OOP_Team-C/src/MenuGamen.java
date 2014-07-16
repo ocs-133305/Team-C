@@ -83,8 +83,8 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					setVisible(false);
 					MainApp.kanriFrame.openKanri();
+					setVisible(false);
 				} catch (NullPointerException ne) {
 
 				}
@@ -95,6 +95,18 @@ public class MenuGamen extends JFrame {
 
 		// ï‘ãpòAóçâÊñ É{É^Éì
 		JButton renrakuButton = new JButton("\u8FD4\u5374\u9023\u7D61");
+		renrakuButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {
+					MainApp.renrakuFrame.openRenraku();
+					setVisible(false);
+					HenkyakuRenrakuGamen.List();
+				} catch (Exception e3) {
+
+				}
+			}
+		});
 		renrakuButton.setBounds(253, 145, 148, 36);
 		contentPane.add(renrakuButton);
 
@@ -110,8 +122,8 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					setVisible(false);
 					MainApp.kashiFrame.openKashidashi();
+					setVisible(false);
 				} catch (Exception e3) {
 
 				}
@@ -126,8 +138,8 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
-					setVisible(false);
 					MainApp.henkyakuFrame.openHenkyaku();
+					setVisible(false);
 				} catch (Exception e4) {
 
 				}
@@ -142,8 +154,8 @@ public class MenuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
+					MainApp.kensakuFrame.openKensaku();
 					setVisible(false);
-					MainApp.kensakuFrame.setVisible(true);
 				} catch (NullPointerException ne) {
 
 				}
