@@ -16,12 +16,12 @@
  * 			・タイトルI/O
  * 			・著者I/O
  * 			・冊数スピナー
- * 			・分類コンボボックス	：SQL（部品生成に必要）
+ * 			・分類コンボボックス
  * 			・出版社I/O
  * 			・ISBN系
- * 			・図書追加ボタン	：確認
- * 			・図書変更ボタン	：確認
- * 			・図書削除ボタン	：確認
+ * 			・図書追加ボタン
+ * 			・図書変更ボタン
+ * 			・図書削除ボタン
  * 			・編集クリアボタン
  * 		・会員管理タブ
  * 			・会員番号I/O
@@ -31,9 +31,9 @@
  * 			・郵便番号I/O
  * 			・電話番号I/O
  * 			・メールアドレスI/O
- * 			・会員追加ボタン	：確認
- * 			・会員削除ボタン	：確認
- * 			・会員変更ボタン	：確認
+ * 			・会員追加ボタン
+ * 			・会員削除ボタン
+ * 			・会員変更ボタン
  * 			・編集クリアボタン
  * 	・図書管理：編集チェックメソッド
  * 	・図書管理：各項目の長さチェック
@@ -42,6 +42,7 @@
  * 	・図書タブクリアメソッド
  * 	・会員タブクリアメソッド
  * 	・ISBNチェックメソッド
+ * 
  */
 
 import java.awt.EventQueue;
@@ -67,10 +68,10 @@ import java.awt.Toolkit;
 
 public class KanriGamen extends JFrame {
 
-	private JPanel contentPane;			// メインパネル
-	private JTextField messageField;	// メッセージ表示領域
-	private JTabbedPane tabbedPane;		// タブ領域
-	private	JButton exitButton;			// 終了ボタン
+	private JPanel contentPane; // メインパネル
+	private JTextField messageField; // メッセージ表示領域
+	private JTabbedPane tabbedPane; // タブ領域
+	private JButton exitButton; // 終了ボタン
 
 	// 図書管理タブの部品
 	private JPanel bookEdit;
@@ -124,18 +125,18 @@ public class KanriGamen extends JFrame {
 	private String sqlstr; // SQL文格納
 
 	// 図書管理用変数
-	private int bidval, checkval, bnum; 	// 図書管理番号、チェックディジット
-	private long isbnval;					// ISBN
-	private String btitle, bauthor;			// 図書名、著者、分類（ジャンル）
-	private String company;					// 出版社
+	private int bidval, checkval, bnum; // 図書管理番号、チェックディジット
+	private long isbnval; // ISBN
+	private String btitle, bauthor; // 図書名、著者、分類（ジャンル）
+	private String company; // 出版社
 
 	// 会員管理用変数
-	private int uidval, upostval;			// 会員番号、郵便番号
-	private long uphoneval;					// 電話番号
-	private String uname, uaddress, umail;	// 氏名、住所、メールアドレス
-	private int class_id;					// 分類番号
-	private int check;						// UPDATE文の戻り値格納用
-	
+	private int uidval, upostval; // 会員番号、郵便番号
+	private long uphoneval; // 電話番号
+	private String uname, uaddress, umail; // 氏名、住所、メールアドレス
+	private int class_id; // 分類番号
+	private int check; // UPDATE文の戻り値格納用
+
 	// コンポーネント有効化フラグ
 	// 無効化したボタンを押せないようにするために追加
 	private boolean bsearchflg;
@@ -150,7 +151,7 @@ public class KanriGamen extends JFrame {
 	private boolean udeleteflg;
 
 	/**
-	 * Launch the application. 単体テスト用後々メインアプリに統合予定
+	 * 単体テスト用メインメソッド
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -166,15 +167,17 @@ public class KanriGamen extends JFrame {
 	}
 
 	public KanriGamen() throws Exception {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(KanriGamen.class.getResource("/picture/book84.png")));
+		// アイコン読み込み
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				KanriGamen.class.getResource("/picture/book84.png")));
 
-		// インスタンス生成
+		// DB接続インスタンス生成
 		db = new DBConnect();
 
-		// サイズ変更不可
+		// ウィンドウサイズ変更不可
 		setResizable(false);
 
-		// メイン領域
+	// メイン領域
 		// フレームの設定
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("\u7BA1\u7406\u753B\u9762"); // タイトル「管理画面」
@@ -194,17 +197,17 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// メニュー画面を開き、この画面を閉じる（隠す）　入力中の内容はキャンセル扱い
-				try{
+				try {
 					MainApp.menuFrame.openMenu();
 					setVisible(false);
 					clearBField();
 					clearUField();
-				}catch(Exception e){
-					
+				} catch (Exception e) {
+
 				}
 			}
 		});
-		exitButton.setBounds(481, 13, 101, 25); // サイズ
+		exitButton.setBounds(481, 13, 101, 25);
 		contentPane.add(exitButton);
 
 		// エラーなど表示領域
@@ -247,50 +250,55 @@ public class KanriGamen extends JFrame {
 		bsearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(bsearchflg){
+				if (bsearchflg) {	// ボタンが有効か？
 					buf = bidField.getText();
 					if (buf.length() == 8) { // 文字数チェック
 						try {
 							// DB接続 成功したら処理開始
 							if (db.connect()) {
 								bidval = Integer.parseInt(buf); // bidvalにintで格納（エラーチェックのため）
-	
+
 								// SQL文構築
 								sqlstr = "SELECT * FROM book WHERE book_id = "
 										+ bidval;
 								// SQL実行
 								ResultSet rs = db.select(sqlstr);
-	
+
 								// 戻り値に中身があれば結果を表示（一件のみ）
 								if (rs.next()) {
-									// ISBNを表示用にいじる（仮） テキストフィールドとチェック用スピナーに分ける必要がある
+									// ISBNを表示用にいじる（仮）
+									// テキストフィールドとチェック用スピナーに分ける必要がある
 									isbnval = rs.getLong("ISBN");
 									checkval = (int) (isbnval % 10);
 									isbnval /= 10;
 									buf = Long.toString(isbnval);
-	
+
 									// 各領域に表示
-									btitleField.setText(rs.getString("book_name"));
+									btitleField.setText(rs
+											.getString("book_name"));
 									bauthorField.setText(rs.getString("author"));
-									companyField.setText(rs.getString("company"));
+									companyField.setText(rs
+											.getString("company"));
 									isbnField.setText(buf);
 									isbnSpinner.setValue(checkval);
 									// コンボボックスで表示する文字の添え字を指定
 									bclassComboBox.setSelectedIndex(rs
 											.getInt("class_id"));
-	
+
 									// メッセージの表示
 									messageField.setText("図書管理番号："
 											+ bidField.getText() + "の情報を表示します");
 									// 削除ボタンを有効化
+									bdeleteflg = true;
 									bdeleteButton.setEnabled(bdeleteflg);
 									// 会員番号を編集不可に
 									bidField.setEditable(false);
 									// 冊数スピナーを無効化
 									bnumSpinner.setEnabled(false);
 									// 検索ボタンを無効化
+									bsearchflg = false;
 									bsearchButton.setEnabled(bsearchflg);
-	
+
 									db.close();
 								} else {
 									messageField.setText("該当する図書は存在しません");
@@ -298,7 +306,7 @@ public class KanriGamen extends JFrame {
 							} else {
 								messageField.setText("データベースへの接続に失敗しました");
 							}
-	
+
 						} catch (NumberFormatException e) { // 数値変換に失敗
 							messageField.setText("図書管理番号：数値以外が入力されています");
 						} catch (Exception e) { // 予期せぬエラー
@@ -314,7 +322,7 @@ public class KanriGamen extends JFrame {
 		bsearchButton
 				.setToolTipText("\u65E2\u5B58\u306E\u56F3\u66F8\u3092\u691C\u7D22\u3057\u307E\u3059");
 		bsearchButton.setBounds(345, 9, 98, 25);
-		bsearchflg = true;	// 初期値は有効
+		bsearchflg = true; // 初期値は有効
 		bookEdit.add(bsearchButton);
 
 		// ラベル「タイトル」
@@ -414,7 +422,7 @@ public class KanriGamen extends JFrame {
 		isbnLabel_2.setBounds(286, 132, 13, 16);
 		bookEdit.add(isbnLabel_2);
 
-		// ISBNチェックスピナー・・・ ISBN下一桁はチェックディジットとして扱われる
+		// ISBNチェックスピナー・・・ ISBN下一桁はチェックディジットとして扱われるため
 		isbnSpinner = new JSpinner();
 		isbnSpinner.setModel(new SpinnerNumberModel(0, 0, 9, 1));
 		isbnSpinner.setBounds(303, 126, 30, 22);
@@ -423,34 +431,34 @@ public class KanriGamen extends JFrame {
 		// 図書追加ボタン
 		baddButton = new JButton("\u8FFD\u52A0"); // 「追加」
 		baddButton.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(baddflg){
+				if (baddflg) {	// ボタンが有効か？
 					checkval = (int) isbnSpinner.getValue();
-					// 各項目の長さチェック(別メソッド) 戻り値trueなら本処理
-					if (blengthCheck()) {
+					if (blengthCheck()) {	// 各項目の長さチェック(別メソッド) 戻り値trueなら本処理
 						try {
 							// DB接続 成功したら処理開始
 							if (db.connect()) {
 								isbnval = Long.parseLong(isbnField.getText());
-	
+
 								// 各項目をいったん変数に格納
 								btitle = btitleField.getText(); // タイトル
 								bauthor = bauthorField.getText(); // 著者
 								company = companyField.getText(); // 出版社
 								bnum = (int) bnumSpinner.getValue(); // 冊数=同じ本を何冊追加するのか
 								isbnval = isbnval * 10 + checkval; // ISBNはスピナーの値と結合
-	
+
+								// コンボボックスのインデックス取得
 								class_id = bclassComboBox.getSelectedIndex();
+
 								int bid = 0; // 図書番号
 								ResultSet rs = db
 										.select("SELECT MAX(book_id) FROM book");
-	
+
 								if (rs.next()) {
 									bid = rs.getInt(1) + 1;
 								}
-								// SQLを使った処理（図書管理番号の採番、インサート）
+								// インサート
 								for (int i = 0; i < bnum; i++) {
 									db.update("INSERT INTO book VALUES(" + bid
 											+ ",'" + btitle + "','" + bauthor
@@ -464,7 +472,7 @@ public class KanriGamen extends JFrame {
 								} else {
 									messageField.setText(bnum + "冊を登録しました");
 								}
-	
+
 								// 各領域のクリア
 								clearBField();
 								db.close();
@@ -490,31 +498,31 @@ public class KanriGamen extends JFrame {
 		bupdateButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(bupdateflg){
+				if (bupdateflg) {
 					checkval = (int) isbnSpinner.getValue();
 					// 各項目の長さチェック(別メソッド) 戻り値trueなら本処理
 					if (blengthCheck()) {
 						try {
 							if (db.connect()) {
 								isbnval = Long.parseLong(isbnField.getText());
-	
+
 								// 各項目をいったん変数に格納
 								btitle = btitleField.getText(); // タイトル
 								bauthor = bauthorField.getText(); // 著者
 								company = companyField.getText(); // 出版社
 								isbnval = isbnval * 10 + checkval; // ISBNはスピナーの値と結合
 								class_id = bclassComboBox.getSelectedIndex();
-	
+
 								// SQL文構築（仮）
-								sqlstr = "UPDATE book SET book_name = '" + btitle
-										+ "',author ='" + bauthor + "',class_id = "
-										+ class_id + ",company ='" + company
-										+ "',isbn =" + isbnval + "WHERE book_id="
-										+ bidval;
-	
+								sqlstr = "UPDATE book SET book_name = '"
+										+ btitle + "',author ='" + bauthor
+										+ "',class_id = " + class_id
+										+ ",company ='" + company + "',isbn ="
+										+ isbnval + "WHERE book_id=" + bidval;
+
 								// SQL実行（仮）
 								check = db.update(sqlstr);
-	
+
 								// メッセージ表示
 								if (check != -1) {
 									messageField.setText("図書管理番号：" + bidval
@@ -547,14 +555,15 @@ public class KanriGamen extends JFrame {
 		bdeleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(bdeleteflg){
+				if (bdeleteflg) {
 					try {
 						if (db.connect()) {
 							// SQL文構築
-							sqlstr = "DELETE FROM book WHERE book_id =" + bidval;
+							sqlstr = "DELETE FROM book WHERE book_id ="
+									+ bidval;
 							// SQL実行
 							check = db.update(sqlstr);
-	
+
 							// メッセージ表示
 							if (check != -1) {
 								messageField.setText("図書管理番号：" + bidval
@@ -562,14 +571,14 @@ public class KanriGamen extends JFrame {
 							} else {
 								messageField.setText("削除に失敗しました。");
 							}
-	
+
 							// 各領域をクリア
 							clearBField();
 							db.close();
 						} else {
 							messageField.setText("DBへの接続に失敗しました");
 						}
-	
+
 					} catch (Exception bde) {
 						messageField.setText("図書の削除：予期せぬエラーが発生しました");
 					}
@@ -586,7 +595,7 @@ public class KanriGamen extends JFrame {
 		bclearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(bclearflg){
+				if (bclearflg) {
 					messageField.setText("編集をキャンセルしました");
 					clearBField();
 				}
@@ -599,7 +608,7 @@ public class KanriGamen extends JFrame {
 		bclearflg = true;
 		bookEdit.add(bclearButton);
 
-	// 会員管理タブ
+		// 会員管理タブ
 		userEdit = new JPanel();
 		// タイトル「会員管理」 tip「会員の追加・変更・削除」
 		tabbedPane
@@ -624,7 +633,7 @@ public class KanriGamen extends JFrame {
 		usearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(usearchflg){
+				if (usearchflg) {
 					buf = uidField.getText();
 					if (buf.length() == 8) { // 文字数チェック
 						try {
@@ -634,27 +643,31 @@ public class KanriGamen extends JFrame {
 								sqlstr = "SELECT * FROM user WHERE user_id = "
 										+ uidval;
 								// SQL実行（仮） sqlretはテスト用 使っても使わなくてもいい
-	
+
 								ResultSet rs = db.select(sqlstr);
-	
+
 								// 各領域に表示
 								if (rs.next()) {
-									unameField.setText(rs.getString("user_name"));
-									uaddressField.setText(rs.getString("address"));
+									unameField.setText(rs
+											.getString("user_name"));
+									uaddressField.setText(rs
+											.getString("address"));
 									upostField.setText(rs.getString("post"));
 									uphoneField.setText(rs.getString("phone"));
 									umailField.setText(rs.getString("mail"));
 								}
 								// メッセージの表示
-								messageField
-										.setText("会員番号：" + uidval + "の情報を表示します");
+								messageField.setText("会員番号：" + uidval
+										+ "の情報を表示します");
 								// 削除ボタンを有効化
-								udeleteButton.setEnabled(true);
+								udeleteflg = true;
+								udeleteButton.setEnabled(udeleteflg);
 								// 会員番号を編集不可に
 								uidField.setEditable(false);
 								// 検索ボタンを無効化
-								usearchButton.setEnabled(false);
-	
+								usearchflg = false;
+								usearchButton.setEnabled(usearchflg);
+
 								rs.close();
 								db.close();
 							} else {
@@ -769,7 +782,7 @@ public class KanriGamen extends JFrame {
 		uaddButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(uaddflg){
+				if (uaddflg) {
 					// 各項目の長さチェック（別メソッド） 戻り値trueなら本処理実行
 					if (ulengthCheck()) {
 						try {
@@ -778,30 +791,30 @@ public class KanriGamen extends JFrame {
 								if (db.connect()) {
 									uphoneval = Long.parseLong(uphoneField
 											.getText());
-	
+
 									// 各項目をいったん変数に格納
 									uname = unameField.getText();
 									uaddress = uaddressField.getText();
 									umail = umailField.getText();
-	
+
 									int uid = 0;
-	
+
 									ResultSet rs = db
 											.select("SELECT MAX(user_id) FROM user");
 									if (rs.next()) {
 										uid = rs.getInt(1) + 1;
 									}
-	
+
 									// SQLを使った処理（インサート）
 									db.update("INSERT INTO user VALUES(" + uid
 											+ ",'" + uname + "','" + uaddress
-											+ "'," + upostval + ",'0" + uphoneval
-											+ "','" + umail + "')");
-	
+											+ "'," + upostval + ",'0"
+											+ uphoneval + "','" + umail + "')");
+
 									// メッセージ表示
 									messageField.setText("会員番号：" + uid
 											+ "として登録しました");
-	
+
 									// 各領域のクリア
 									clearUField();
 									rs.close();
@@ -835,17 +848,18 @@ public class KanriGamen extends JFrame {
 		udeleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(udeleteflg){
+				if (udeleteflg) {
 					try {
 						if (db.connect()) {
-	
+
 							// uidvalは検索段階で検査・代入済み
 							// SQL文構築
-							sqlstr = "DELETE FROM user WHERE user_id = " + uidval;
+							sqlstr = "DELETE FROM user WHERE user_id = "
+									+ uidval;
 							// SQL実行
-	
+
 							db.update(sqlstr);
-	
+
 							// メッセージ表示
 							if (check != -1) {
 								messageField.setText("会員番号：" + uidval
@@ -853,7 +867,7 @@ public class KanriGamen extends JFrame {
 							} else {
 								messageField.setText("会員情報の削除に失敗しました");
 							}
-	
+
 							// 各領域をクリア
 							clearUField();
 							db.close();
@@ -875,7 +889,7 @@ public class KanriGamen extends JFrame {
 		uupdateButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(uupdateflg){
+				if (uupdateflg) {
 					// 各項目の長さチェック（別メソッド） 戻り値trueなら本処理実行
 					if (ulengthCheck()) {
 						try {
@@ -884,26 +898,27 @@ public class KanriGamen extends JFrame {
 								if (db.connect()) {
 									uphoneval = Long.parseLong(uphoneField
 											.getText());
-	
+
 									// 各項目をいったん変数に格納（uidvalは検索時に検査・代入済）
 									uname = unameField.getText();
 									uaddress = uaddressField.getText();
 									umail = umailField.getText();
-	
+
 									// SQL文構築
 									sqlstr = "UPDATE user SET user_name = '"
-											+ uname + "', address ='" + uaddress
-											+ "',post = " + upostval + ",phone =0"
-											+ uphoneval + ",mail ='" + umail
+											+ uname + "', address ='"
+											+ uaddress + "',post = " + upostval
+											+ ",phone =0" + uphoneval
+											+ ",mail ='" + umail
 											+ "' WHERE user_id=" + uidval;
-	
+
 									// SQL実行
 									db.update(sqlstr);
-	
+
 									// メッセージ表示
 									messageField.setText("会員番号：" + uidval
 											+ "の情報を変更しました");
-	
+
 									// 各領域のクリア
 									clearUField();
 									db.close();
@@ -936,7 +951,7 @@ public class KanriGamen extends JFrame {
 		uclearButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(uclearflg){
+				if (uclearflg) {
 					// メッセージ表示
 					messageField.setText("編集をキャンセルしました");
 
@@ -1087,7 +1102,7 @@ public class KanriGamen extends JFrame {
 		udeleteButton.setEnabled(udeleteflg);
 	}
 
-	// ISBNチェック （暫定版）
+	// ISBNチェック
 	public boolean isbnCheck(String str, int checkval) {
 		long longval = Long.parseLong(str);
 		int[] array = new int[str.length()];
@@ -1117,7 +1132,7 @@ public class KanriGamen extends JFrame {
 			intval = 10 - intval;
 		}
 
-		// 比較
+		// チェックディジット比較
 		if (intval != checkval) {
 			return true;
 		}
@@ -1153,8 +1168,8 @@ public class KanriGamen extends JFrame {
 		return array;
 	}
 
-	//　画面オープンメソッド
-	public void openKanri(){
+	// 画面オープンメソッド
+	public void openKanri() {
 		this.setVisible(true);
 	}
 }
