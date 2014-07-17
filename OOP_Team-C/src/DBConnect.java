@@ -1,5 +1,5 @@
 /*　データベースに接続する処理をまとめたクラス
- * 制作：武田		追記：
+ * 制作：武田
  */
 
 import java.sql.Connection;
@@ -17,17 +17,18 @@ public class DBConnect {
 	boolean flg;
 
 	// データベースに接続する
+	// フラグを戻り値として返すことで成否の判定をする
 	public boolean connect() {
 
 		try {
 			// ドライバロード
 			Class.forName("com.mysql.jdbc.Driver");
 
-			// MySQLに接続(ローカルテスト用)
-//			con = DriverManager.getConnection("jdbc:mysql://localhost:4649/hoge","root", "root");
+			// MySQLに接続(ローカル用)
+			con = DriverManager.getConnection("jdbc:mysql://localhost:4649/library","root", "root");
 
-			// MySQLに接続（水口PCテスト環境）
-			con = DriverManager.getConnection("jdbc:mysql://10.15.141.5:3306/l_sample", "root", "root");
+			// MySQLに接続（水口PCテスト環境用）
+//			con = DriverManager.getConnection("jdbc:mysql://10.15.141.5:3306/l_sample", "root", "root");
 
 			// ステートメント生成
 			stmt = con.createStatement();

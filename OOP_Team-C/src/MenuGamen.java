@@ -110,12 +110,6 @@ public class MenuGamen extends JFrame {
 		renrakuButton.setBounds(253, 145, 148, 36);
 		contentPane.add(renrakuButton);
 
-		/*
-		 * //　図書管理画面ボタン JButton bkanriButton = new
-		 * JButton("\u56F3\u66F8\u7BA1\u7406"); bkanriButton.setBounds(253, 201,
-		 * 148, 36); contentPane.add(bkanriButton);
-		 */
-
 		// 貸出画面ボタン
 		JButton kashiButton = new JButton("\u8CB8\u51FA");
 		kashiButton.addMouseListener(new MouseAdapter() {
