@@ -65,6 +65,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class KanriGamen extends JFrame {
 
@@ -144,6 +146,7 @@ public class KanriGamen extends JFrame {
 	private boolean baddflg;
 	private boolean bupdateflg;
 	private boolean bdeleteflg;
+	private boolean bclassflg;
 	private boolean usearchflg;
 	private boolean uclearflg;
 	private boolean uaddflg;
@@ -295,6 +298,9 @@ public class KanriGamen extends JFrame {
 									bidField.setEditable(false);
 									// 冊数スピナーを無効化
 									bnumSpinner.setEnabled(false);
+									// 分類コンボボックス有効化
+									bclassflg = true;
+									bclassComboBox.setEnabled(bclassflg);
 									// 検索ボタンを無効化
 									bsearchflg = false;
 									bsearchButton.setEnabled(bsearchflg);
@@ -377,10 +383,19 @@ public class KanriGamen extends JFrame {
 
 		// 分類コンボボックス 要・SQLによる項目取得
 		bclassComboBox = new JComboBox();
-
+		bclassComboBox.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(bclassflg){
+					bfieldCheck();
+				}
+			}
+		});
 		// テスト用モデル ここはSQLでclassテーブルの項目を持ってきた
 		bclassComboBox.setModel(new DefaultComboBoxModel(this.arrayS()));
 		bclassComboBox.setBounds(114, 158, 110, 22);
+		bclassflg = false;
+		bclassComboBox.setEnabled(bclassflg);
 		bookEdit.add(bclassComboBox);
 
 		// ラベル「出版社」
@@ -809,8 +824,8 @@ public class KanriGamen extends JFrame {
 									// SQLを使った処理（インサート）
 									db.update("INSERT INTO user VALUES(" + uid
 											+ ",'" + uname + "','" + uaddress
-											+ "'," + upostval + ",'0"
-											+ uphoneval + "','" + umail + "')");
+											+ "'," + upostField.getText() + ",'"
+											+ uphoneField.getText() + "','" + umail + "')");
 
 									// メッセージ表示
 									messageField.setText("会員番号：" + uid
@@ -977,6 +992,9 @@ public class KanriGamen extends JFrame {
 			// 追加ボタン有効化
 			baddflg = true;
 			baddButton.setEnabled(baddflg);
+			// 分類ボックス有効化
+			bclassflg = true;
+			bclassComboBox.setEnabled(bclassflg);
 		} else {
 			// 変更ボタン有効化
 			bupdateflg = true;
@@ -1069,7 +1087,8 @@ public class KanriGamen extends JFrame {
 		isbnSpinner.setValue(0);
 		bnumSpinner.setEnabled(true);
 		bnumSpinner.setValue(1);
-		bclassComboBox.setEditable(true);
+		bclassflg = false;
+		bclassComboBox.setEnabled(bclassflg);
 		bclassComboBox.setSelectedIndex(-1);
 
 		// 各編集ボタンの無効化
