@@ -464,6 +464,7 @@ public class KanriGamen extends JFrame {
 											+ ",'" + btitle + "','" + bauthor
 											+ "'," + class_id + ",'" + company
 											+ "'," + isbnval + ")");
+									bid++;
 								}
 								// メッセージ表示
 								if (bnum == 1) {
