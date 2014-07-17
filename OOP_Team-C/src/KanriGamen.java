@@ -513,14 +513,14 @@ public class KanriGamen extends JFrame {
 								isbnval = isbnval * 10 + checkval; // ISBNはスピナーの値と結合
 								class_id = bclassComboBox.getSelectedIndex();
 
-								// SQL文構築（仮）
+								// SQL文構築
 								sqlstr = "UPDATE book SET book_name = '"
 										+ btitle + "',author ='" + bauthor
 										+ "',class_id = " + class_id
 										+ ",company ='" + company + "',isbn ="
 										+ isbnval + "WHERE book_id=" + bidval;
 
-								// SQL実行（仮）
+								// SQL実行
 								check = db.update(sqlstr);
 
 								// メッセージ表示
@@ -561,7 +561,7 @@ public class KanriGamen extends JFrame {
 							// SQL文構築
 							sqlstr = "DELETE FROM book WHERE book_id ="
 									+ bidval;
-							// SQL実行
+							// SQL実行・結果の格納
 							check = db.update(sqlstr);
 
 							// メッセージ表示
@@ -639,11 +639,11 @@ public class KanriGamen extends JFrame {
 						try {
 							if (db.connect()) {
 								uidval = Integer.parseInt(buf); // uidvalにintで格納（エラーチェック用）
-								// SQL文構築（仮）
+								// SQL文構築
 								sqlstr = "SELECT * FROM user WHERE user_id = "
 										+ uidval;
-								// SQL実行（仮） sqlretはテスト用 使っても使わなくてもいい
 
+								// SQL実行・結果の格納
 								ResultSet rs = db.select(sqlstr);
 
 								// 各領域に表示
