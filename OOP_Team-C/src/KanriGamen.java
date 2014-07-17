@@ -129,6 +129,7 @@ public class KanriGamen extends JFrame {
 	// 図書管理用変数
 	private int bidval, checkval, bnum; // 図書管理番号、チェックディジット
 	private long isbnval; // ISBN
+	private long isbnval2;
 	private String btitle, bauthor; // 図書名、著者、分類（ジャンル）
 	private String company; // 出版社
 
@@ -251,6 +252,7 @@ public class KanriGamen extends JFrame {
 		bsearchButton = new JButton("\u691C\u7D22"); // 「検索」
 		// ボタンが押されたとき、テキストフィールドの内容が正しければselect文を飛ばして既存の図書情報を各領域に表示する
 		bsearchButton.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (bsearchflg) {	// ボタンが有効か？
@@ -272,6 +274,7 @@ public class KanriGamen extends JFrame {
 									// ISBNを表示用にいじる（仮）
 									// テキストフィールドとチェック用スピナーに分ける必要がある
 									isbnval = rs.getLong("ISBN");
+									isbnval2 = rs.getLong("ISBN");
 									checkval = (int) (isbnval % 10);
 									isbnval /= 10;
 									buf = Long.toString(isbnval);
@@ -534,7 +537,7 @@ public class KanriGamen extends JFrame {
 										+ btitle + "',author ='" + bauthor
 										+ "',class_id = " + class_id
 										+ ",company ='" + company + "',isbn ="
-										+ isbnval + "WHERE book_id=" + bidval;
+										+ isbnval + " WHERE ISBN = " + isbnval2;
 
 								// SQL実行
 								check = db.update(sqlstr);
