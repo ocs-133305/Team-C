@@ -86,8 +86,14 @@ public class HenkyakuRenrakuGamen extends JFrame {
 				try{
 					// 接続を閉じる
 					DB.close();
+					textArea.setText("");
+					mailtext.setText("");
+					addresstext.setText("");
+					telltext.setText("");
+					
 					MainApp.menuFrame.openMenu();
 					setVisible(false);
+					label.setText("エラー表示領域");
 				}catch(Exception ee){
 					
 				}
@@ -137,6 +143,7 @@ public class HenkyakuRenrakuGamen extends JFrame {
 							textArea.setText("");
 							mailtext.setText("");
 							addresstext.setText("");
+							telltext.setText("");
 
 						} catch (SQLException e) {
 							label.setText("データベース接続エラー3");

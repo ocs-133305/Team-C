@@ -27,6 +27,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Kensaku extends JFrame {
 
@@ -41,6 +43,7 @@ public class Kensaku extends JFrame {
 	private JTable table;
 	private JComboBox comboBox;
 	private DBConnect db; // DBに接続するためのメソッドを呼び出す
+	private String buf;
 	final String[] columnNames = { "タイトル", "著者", "ジャンル" }; // 列名
 	DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -93,6 +96,15 @@ public class Kensaku extends JFrame {
 
 		// タイトル入力領域
 		textField_1 = new JTextField();
+		textField_1.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = textField_1.getText();
+				if(buf.length() > 60){
+					textField_1.setText(buf.substring(0, 60));
+				}
+			}
+		});
 		textField_1.setColumns(10);
 		textField_1.setBounds(120, 76, 328, 34);
 		contentPane.add(textField_1);
@@ -105,6 +117,15 @@ public class Kensaku extends JFrame {
 
 		// 著者入力領域
 		textField_2 = new JTextField();
+		textField_2.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = textField_2.getText();
+				if(buf.length() > 30){
+					textField_2.setText(buf.substring(0, 30));
+				}
+			}
+		});
 		textField_2.setColumns(10);
 		textField_2.setBounds(120, 134, 328, 34);
 		contentPane.add(textField_2);

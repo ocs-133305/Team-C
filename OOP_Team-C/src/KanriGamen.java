@@ -74,6 +74,7 @@ public class KanriGamen extends JFrame {
 	private JTextField messageField; // メッセージ表示領域
 	private JTabbedPane tabbedPane; // タブ領域
 	private JButton exitButton; // 終了ボタン
+	private String dmsg = "\u30E1\u30C3\u30BB\u30FC\u30B8\u8868\u793A\u9818\u57DF";
 
 	// 図書管理タブの部品
 	private JPanel bookEdit;
@@ -206,6 +207,7 @@ public class KanriGamen extends JFrame {
 					setVisible(false);
 					clearBField();
 					clearUField();
+					messageField.setText(dmsg);
 				} catch (Exception e) {
 
 				}
@@ -218,7 +220,7 @@ public class KanriGamen extends JFrame {
 		messageField = new JTextField();
 		messageField.setHorizontalAlignment(SwingConstants.CENTER);
 		messageField
-				.setText("\u30E1\u30C3\u30BB\u30FC\u30B8\u8868\u793A\u9818\u57DF"); // 初期テキスト「メッセージ表示領域」
+				.setText(dmsg); // 初期テキスト「メッセージ表示領域」
 		messageField.setEditable(false); // 編集不可能
 		messageField.setBounds(12, 51, 570, 22);
 		contentPane.add(messageField);
@@ -244,6 +246,15 @@ public class KanriGamen extends JFrame {
 
 		// 図書管理番号入力フィールド
 		bidField = new JTextField();
+		bidField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = bidField.getText();
+				if(buf.length() > 8){
+					bidField.setText(buf.substring(0, 8));
+				}
+			}
+		});
 		bidField.setBounds(114, 10, 219, 22);
 		bookEdit.add(bidField);
 		bidField.setColumns(10);
@@ -346,6 +357,13 @@ public class KanriGamen extends JFrame {
 			public void keyTyped(KeyEvent arg0) {
 				bfieldCheck();
 			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = btitleField.getText();
+				if(buf.length() > 60){
+					btitleField.setText(buf.substring(0, 60));
+				}
+			}
 		});
 		btitleField.setBounds(114, 39, 219, 22);
 		bookEdit.add(btitleField);
@@ -362,6 +380,13 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 				bfieldCheck();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = bauthorField.getText();
+				if(buf.length() > 30){
+					bauthorField.setText(buf.substring(0, 30));
+				}
 			}
 		});
 		bauthorField.setBounds(114, 68, 219, 22);
@@ -413,6 +438,13 @@ public class KanriGamen extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				bfieldCheck();
 			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = companyField.getText();
+				if(buf.length() > 20){
+					companyField.setText(buf.substring(0, 20));
+				}
+			}
 		});
 		companyField.setBounds(114, 97, 219, 22);
 		bookEdit.add(companyField);
@@ -429,6 +461,13 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				bfieldCheck();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = isbnField.getText();
+				if(buf.length() > 12){
+					isbnField.setText(buf.substring(0, 12));
+				}
 			}
 		});
 		isbnField.setBounds(114, 126, 160, 22);
@@ -642,6 +681,15 @@ public class KanriGamen extends JFrame {
 
 		// 会員番号表示/入力領域
 		uidField = new JTextField();
+		uidField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = uidField.getText();
+				if(buf.length() > 8){
+					uidField.setText(buf.substring(0, 8));
+				}
+			}
+		});
 		uidField.setBounds(114, 10, 219, 22);
 		userEdit.add(uidField);
 		uidField.setColumns(10);
@@ -674,18 +722,20 @@ public class KanriGamen extends JFrame {
 									upostField.setText(rs.getString("post"));
 									uphoneField.setText(rs.getString("phone"));
 									umailField.setText(rs.getString("mail"));
+									// メッセージの表示
+									messageField.setText("会員番号：" + uidval
+											+ "の情報を表示します");
+									// 削除ボタンを有効化
+									udeleteflg = true;
+									udeleteButton.setEnabled(udeleteflg);
+									// 会員番号を編集不可に
+									uidField.setEditable(false);
+									// 検索ボタンを無効化
+									usearchflg = false;
+									usearchButton.setEnabled(usearchflg);
+								}else{
+									messageField.setText("該当する会員は存在しません");
 								}
-								// メッセージの表示
-								messageField.setText("会員番号：" + uidval
-										+ "の情報を表示します");
-								// 削除ボタンを有効化
-								udeleteflg = true;
-								udeleteButton.setEnabled(udeleteflg);
-								// 会員番号を編集不可に
-								uidField.setEditable(false);
-								// 検索ボタンを無効化
-								usearchflg = false;
-								usearchButton.setEnabled(usearchflg);
 
 								rs.close();
 								db.close();
@@ -722,6 +772,13 @@ public class KanriGamen extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				ufieldCheck();
 			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = unameField.getText();
+				if(buf.length() > 20){
+					unameField.setText(buf.substring(0, 20));
+				}
+			}
 		});
 		unameField.setBounds(114, 39, 219, 22);
 		userEdit.add(unameField);
@@ -738,6 +795,13 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				ufieldCheck();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = uaddressField.getText();
+				if(buf.length() > 30){
+					uaddressField.setText(buf.substring(0, 30));
+				}
 			}
 		});
 		uaddressField.setBounds(114, 68, 219, 22);
@@ -756,6 +820,13 @@ public class KanriGamen extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				ufieldCheck();
 			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = upostField.getText();
+				if(buf.length() > 7){
+					upostField.setText(buf.substring(0, 7));
+				}
+			}
 		});
 		upostField.setBounds(114, 97, 219, 22);
 		userEdit.add(upostField);
@@ -773,6 +844,13 @@ public class KanriGamen extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				ufieldCheck();
 			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = uphoneField.getText();
+				if(buf.length() > 11){
+					uphoneField.setText(buf.substring(0, 11));
+				}
+			}
 		});
 		uphoneField.setBounds(114, 126, 219, 22);
 		userEdit.add(uphoneField);
@@ -789,6 +867,13 @@ public class KanriGamen extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				ufieldCheck();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = umailField.getText();
+				if(buf.length() > 50){
+					umailField.setText(buf.substring(0, 50));
+				}
 			}
 		});
 		umailField.setBounds(114, 155, 219, 22);
@@ -877,7 +962,7 @@ public class KanriGamen extends JFrame {
 									+ uidval;
 							// SQL実行
 
-							db.update(sqlstr);
+							check = db.update(sqlstr);
 
 							// メッセージ表示
 							if (check != -1) {
@@ -1024,6 +1109,8 @@ public class KanriGamen extends JFrame {
 			messageField.setText("エラー：ISBNを12桁で入力してください");
 		} else if (isbnCheck(isbnField.getText(), checkval)) {
 			messageField.setText("エラー：ISBNの値が間違っています");
+		} else if (bclassComboBox.getSelectedIndex() == 0){
+			messageField.setText("エラー：分類が選択されていません");
 		} else {
 			flg = true;
 		}

@@ -19,6 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class HenkyakuGamen extends JFrame {
 
@@ -130,12 +132,15 @@ public class HenkyakuGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
+					model.clear();
+					messageField.setText("メッセージ表示領域");
 					setVisible(false);
 					MainApp.menuFrame.setVisible(true);
 				} catch (Exception oe) {
 
 				} finally {
 					crearUField();
+					
 				}
 			}
 		});
@@ -159,6 +164,15 @@ public class HenkyakuGamen extends JFrame {
 
 		// 会員番号入力・表示領域
 		uidField = new JTextField();
+		uidField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = uidField.getText();
+				if(buf.length() > 8){
+					uidField.setText(buf.substring(0, 8));
+				}
+			}
+		});
 		uidField.setBounds(114, 101, 219, 22);
 		contentPane.add(uidField);
 		uidField.setColumns(10);

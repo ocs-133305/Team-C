@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class KashidashiGamen extends JFrame {
 
@@ -99,8 +101,10 @@ public class KashidashiGamen extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					setVisible(false);
 					MainApp.menuFrame.openMenu();
+					setVisible(false);
+					messageField
+					.setText("\u30E1\u30C3\u30BB\u30FC\u30B8\u8868\u793A\u9818\u57DF");
 				} catch (Exception oe) {
 
 				} finally {
@@ -128,6 +132,15 @@ public class KashidashiGamen extends JFrame {
 
 		// 会員番号入力・表示領域
 		uidField = new JTextField();
+		uidField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = uidField.getText();
+				if(buf.length() > 8){
+					uidField.setText(buf.substring(0, 8));
+				}
+			}
+		});
 		uidField.setBounds(114, 101, 219, 22);
 		contentPane.add(uidField);
 		uidField.setColumns(10);
@@ -263,6 +276,15 @@ public class KashidashiGamen extends JFrame {
 
 		// 図書管理番号入力・表示領域
 		bidField = new JTextField();
+		bidField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				buf = bidField.getText();
+				if(buf.length() > 8){
+					bidField.setText(buf.substring(0, 8));
+				}
+			}
+		});
 		bidField.setEnabled(false);
 		bidField.setBounds(114, 252, 219, 22);
 		contentPane.add(bidField);
