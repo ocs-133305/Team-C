@@ -222,6 +222,8 @@ public class Kensaku extends JFrame {
 						scrollPane.setViewportView(table);
 						table.setShowVerticalLines(false);
 						table.setFillsViewportHeight(false);
+						table.setEnabled(false);
+						table.getTableHeader().setReorderingAllowed(false);
 					} else {
 						try {
 							setVisible(false);
