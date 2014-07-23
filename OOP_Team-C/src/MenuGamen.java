@@ -18,6 +18,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Toolkit;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class MenuGamen extends JFrame {
 
@@ -43,6 +45,7 @@ public class MenuGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public MenuGamen() {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuGamen.class.getResource("/picture/book84.png")));
 		setForeground(new Color(255, 240, 245));
 		setBackground(new Color(255, 250, 205));
@@ -59,7 +62,9 @@ public class MenuGamen extends JFrame {
 		// 点線
 		JLabel label = new JLabel(
 				"\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026");
-		label.setBounds(6, 57, 432, 27);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("MS UI Gothic", Font.PLAIN, 12));
+		label.setBounds(0, 57, 444, 27);
 		contentPane.add(label);
 
 		// 終了ボタン

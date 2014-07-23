@@ -83,6 +83,7 @@ public class KashidashiGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public KashidashiGamen() {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(KashidashiGamen.class.getResource("/picture/book84.png")));
 		db = new DBConnect();
 

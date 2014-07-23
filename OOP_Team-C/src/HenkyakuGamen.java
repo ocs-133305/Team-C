@@ -114,6 +114,7 @@ public class HenkyakuGamen extends JFrame {
 	 * Create the frame.
 	 */
 	public HenkyakuGamen() {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HenkyakuGamen.class.getResource("/picture/book84.png")));
 		db = new DBConnect();
 

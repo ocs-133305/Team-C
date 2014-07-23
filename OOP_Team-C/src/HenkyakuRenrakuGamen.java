@@ -54,6 +54,7 @@ public class HenkyakuRenrakuGamen extends JFrame {
 	}
 
 	public HenkyakuRenrakuGamen() throws SQLException {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(HenkyakuRenrakuGamen.class.getResource("/picture/book84.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 550);
